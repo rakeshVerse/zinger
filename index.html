@@ -4,10 +4,180 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zinger</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
   <body>
-    <h1>Hi rakesh</h1>
+    <div class="container">
+      <header id="app-header">
+        <!-- Search Recipt -->
+        <form action="" id="search-form">
+          <label for="search-recipe">Search</label>
+          <input
+            type="search"
+            name="search-recipe"
+            id="search-recipe"
+            placeholder="Search Recipe"
+          />
+        </form>
+
+        <a href="#" class="btn-add-recipe btn-open-popup">Add Recipe</a>
+
+        <div class="show-bookmarks">
+          Bookmarks
+
+          <div class="bookmark-box hidden">
+            <ul class="recipe-list">
+              <li class="recipe-item">
+                <a href="#" class="recipe-preview-link">
+                  <img
+                    class="preview-img"
+                    src="https://forkify-api.herokuapp.com/images/BBQChickenPizzawithCauliflowerCrust5004699695624ce.jpg"
+                    alt=""
+                  />
+                  <div class="preview-text">
+                    <p class="preview-title">
+                      Cauliflower Pizza Crust (with BBQ Chicken Pizza) quest
+                    </p>
+                    <p class="preview-publisher">Jamie Oliver</p>
+                  </div>
+                </a>
+              </li>
+              <li class="recipe-item">
+                <a href="#" class="recipe-preview-link">
+                  <img
+                    class="preview-img"
+                    src="https://forkify-api.herokuapp.com/images/BBQChickenPizzawithCauliflowerCrust5004699695624ce.jpg"
+                    alt=""
+                  />
+                  <div class="preview-text">
+                    <p class="preview-title">
+                      Cauliflower Pizza Crust (with BBQ Chicken Pizza) quest
+                    </p>
+                    <p class="preview-publisher">Jamie Oliver</p>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <main id="app-main">
+        <aside id="recipe-list-box">
+          <ul class="recipe-list">
+            <li class="recipe-item">
+              <a href="#" class="recipe-preview-link">
+                <img
+                  class="preview-img"
+                  src="https://forkify-api.herokuapp.com/images/BBQChickenPizzawithCauliflowerCrust5004699695624ce.jpg"
+                  alt=""
+                />
+                <div class="preview-text">
+                  <p class="preview-title">
+                    Cauliflower Pizza Crust (with BBQ Chicken Pizza) quest
+                  </p>
+                  <p class="preview-publisher">Jamie Oliver</p>
+                </div>
+              </a>
+            </li>
+            <li class="recipe-item">
+              <a href="#" class="recipe-preview-link">
+                <img
+                  class="preview-img"
+                  src="https://forkify-api.herokuapp.com/images/BBQChickenPizzawithCauliflowerCrust5004699695624ce.jpg"
+                  alt=""
+                />
+                <div class="preview-text">
+                  <p class="preview-title">
+                    Cauliflower Pizza Crust (with BBQ Chicken Pizza) quest
+                  </p>
+                  <p class="preview-publisher">Jamie Oliver</p>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </aside>
+
+        <section id="recipe-detail">
+          <div class="recipe-img-box">
+            <img
+              src="https://forkify-api.herokuapp.com/images/BBQChickenPizzawithCauliflowerCrust5004699695624ce.jpg"
+              alt=""
+              class="recipe-img"
+            />
+            <div class="recipe-text">
+              <h1 class="recipe-title">
+                Cauliflower Pizza Crust (with BBQ Chicken Pizza)
+              </h1>
+
+              <div class="recipe-actions">
+                <p class="recipe-duration"><span>75</span> minutes</p>
+                <div class="recipe-servings">
+                  <p><span>4</span> servings</p>
+                  <a href="#" class="add-serving">+</a>
+                  <a href="#" class="reduce-serving">-</a>
+                </div>
+
+                <a href="#" class="add-bookmark">Bookmark</a>
+              </div>
+
+              <div class="ingredients">
+                <h2 class="ingredients-title">Recipe Ingredients</h2>
+                <ul class="recipe-ingredient-list">
+                  <li class="recipe-ingredient">
+                    1 medium head cauliflower cut into florets
+                  </li>
+                  <li class="recipe-ingredient">
+                    1 medium head cauliflower cut into florets
+                  </li>
+                  <li class="recipe-ingredient">
+                    1 medium head cauliflower cut into florets
+                  </li>
+                  <li class="recipe-ingredient">
+                    1 medium head cauliflower cut into florets
+                  </li>
+                  <li class="recipe-ingredient">
+                    1 medium head cauliflower cut into florets
+                  </li>
+                  <li class="recipe-ingredient">
+                    1 medium head cauliflower cut into florets
+                  </li>
+                  <li class="recipe-ingredient">
+                    1 medium head cauliflower cut into florets
+                  </li>
+                  <li class="recipe-ingredient">
+                    1 medium head cauliflower cut into florets
+                  </li>
+                </ul>
+              </div>
+
+              <div class="cook">
+                <h2 class="cook-title">How to cook it</h2>
+                <p class="cook-text">
+                  This recipe was carefully designed and tested by
+                  <span> Closet Cooking</span>. Please check out directions at
+                  their website.
+                </p>
+                <a href="#" class="btn-direction">Direction &rightarrow;</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="backdrop" class="hidden-popup"></div>
+    <div id="popup" class="hidden-popup">
+      <header>
+        <h1>Hi This is a popup</h1>
+        <span class="btn-close-popup">x</span>
+      </header>
+    </div>
     <script type="module" src="assets/js/main.js"></script>
   </body>
 </html>
