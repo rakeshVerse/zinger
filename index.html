@@ -17,11 +17,11 @@
       <header id="app-header">
         <!-- Search Recipt -->
         <form action="" id="search-form">
-          <label for="search-recipe">Search</label>
+          <label for="search-keyword">Search</label>
           <input
             type="search"
-            name="search-recipe"
-            id="search-recipe"
+            name="search-keyword"
+            id="search-keyword"
             placeholder="Search Recipe"
           />
         </form>
@@ -32,8 +32,8 @@
           Bookmarks
 
           <div class="bookmark-box hidden">
-            <ul class="recipe-list">
-              <li class="recipe-item">
+            <ul class="recipe-list bookmark-list">
+              <li class="recipe-item bookmark-item">
                 <a href="#" class="recipe-preview-link">
                   <img
                     class="preview-img"
@@ -67,40 +67,12 @@
           </div>
         </div>
       </header>
+
       <main id="app-main">
         <aside id="recipe-list-box">
-          <ul class="recipe-list">
-            <li class="recipe-item">
-              <a href="#" class="recipe-preview-link">
-                <img
-                  class="preview-img"
-                  src="https://forkify-api.herokuapp.com/images/BBQChickenPizzawithCauliflowerCrust5004699695624ce.jpg"
-                  alt=""
-                />
-                <div class="preview-text">
-                  <p class="preview-title">
-                    Cauliflower Pizza Crust (with BBQ Chicken Pizza) quest
-                  </p>
-                  <p class="preview-publisher">Jamie Oliver</p>
-                </div>
-              </a>
-            </li>
-            <li class="recipe-item">
-              <a href="#" class="recipe-preview-link">
-                <img
-                  class="preview-img"
-                  src="https://forkify-api.herokuapp.com/images/BBQChickenPizzawithCauliflowerCrust5004699695624ce.jpg"
-                  alt=""
-                />
-                <div class="preview-text">
-                  <p class="preview-title">
-                    Cauliflower Pizza Crust (with BBQ Chicken Pizza) quest
-                  </p>
-                  <p class="preview-publisher">Jamie Oliver</p>
-                </div>
-              </a>
-            </li>
-          </ul>
+          <div class="preview-info">Search results will appear here!</div>
+
+          <ul class="recipe-list recipe-preview-list"></ul>
         </aside>
 
         <section id="recipe-detail">
