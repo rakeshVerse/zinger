@@ -17,6 +17,11 @@ body {
   font-size: 1.8rem;
   font-weight: 300;
   letter-spacing: 0.7px;
+
+  background-image: radial-gradient(#efefff 2px, transparent 2px),
+    radial-gradient(#efefff 2px, #ffffff 2px);
+  background-size: 80px 80px;
+  background-position: 0 0, 40px 40px;
 }
 
 .hidden {
@@ -32,13 +37,25 @@ body {
   display: none;
 }
 
+.btn-link:link,
+.btn-link:visited {
+  text-decoration: none;
+  color: #555;
+}
+
+.btn-link:hover,
+.btn-link:active {
+  text-decoration: underline;
+}
+
 /* HEADER */
 #app-header {
   display: flex;
   gap: 5rem;
   justify-content: center;
+  align-items: center;
 
-  padding: 3rem;
+  padding: 2rem;
   background: rgb(229, 243, 255);
 }
 
@@ -50,6 +67,40 @@ body {
 #app-header .show-bookmarks:hover > .bookmark-box {
   opacity: 1;
   z-index: 1;
+}
+
+.search-input-box {
+  position: relative;
+}
+
+#search-keyword {
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.6rem;
+  border-radius: 20px;
+  font-family: 'Roboto', sans-serif;
+  width: 32rem;
+  color: #555;
+  outline: none;
+}
+
+.btn-search {
+  position: absolute;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 2.4rem;
+  cursor: pointer;
+
+  background-color: aliceblue;
+  padding: 0.7rem 1.5rem;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+
+  position: absolute;
+  top: 50%;
+  right: 8%;
+  transform: translate(50%, -50%);
 }
 
 .bookmark-box {
@@ -70,36 +121,51 @@ body {
   max-width: 40rem;
   background-color: aliceblue;
   padding: 2rem 3rem;
+  position: relative;
+}
+
+.recipe-list {
+  /* 8.4rem (header) + 5rem (pagination) + 3.5rem (footer) + 2rem (aside padding) = 18.9rem */
+  height: calc(100svh - 18.9rem);
   overflow-x: scroll;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.pagination-box {
+  height: 5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .preview-info {
   text-align: center;
-  margin-top: 20rem;
   color: #60b5ff;
   font-size: 2rem;
+
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
 }
 
 .recipe-list > * {
   list-style: none;
 }
 
-.recipe-list {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
 .recipe-preview-link {
   display: flex;
-  gap: 2rem;
-
+  gap: 1.6rem;
   text-decoration: none;
 }
 
 .preview-img {
-  width: 7rem;
-  height: 7rem;
+  width: 6rem;
+  height: 6rem;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -124,6 +190,12 @@ body {
   font-size: 1.4rem;
 }
 
+#preview-footer {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 1rem;
+}
+
 /* DETAILS */
 #recipe-detail {
   flex-grow: 1;
@@ -144,19 +216,19 @@ body {
 .recipe-info p:first-child {
   font-weight: 400;
   font-size: 3rem;
-  margin-bottom: 1rem;
+  margin-bottom: 3rem;
 }
 
 .recipe-info p:nth-child(2) {
   font-weight: 300;
-  font-size: 2.2rem;
-  margin-bottom: 1rem;
+  font-size: 2rem;
+  margin-bottom: 2rem;
 }
 
 .recipe-info p:last-child {
   font-weight: 400;
   text-transform: uppercase;
-  font-size: 2rem;
+  font-size: 1.6rem;
 }
 
 .recipe-img-box {
@@ -182,7 +254,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #f0f8ffb0;
-  font-size: 3rem;
+  font-size: 2.6rem;
   padding: 1rem;
   text-align: center;
   text-transform: uppercase;
@@ -210,7 +282,6 @@ body {
 
 .recipe-duration span,
 .recipe-servings span {
-  font-size: 2.2rem;
   font-weight: 400;
 }
 
@@ -224,7 +295,7 @@ body {
 .cook-title {
   margin-bottom: 1rem;
   font-weight: 500;
-  font-size: 2.2rem;
+  font-size: 2rem;
   text-transform: uppercase;
 }
 
@@ -236,11 +307,13 @@ body {
   list-style: none;
   justify-items: start;
   text-align: left;
+  font-size: 1.7rem;
 }
 
 /* cook */
 .cook {
   text-align: center;
+  font-size: 1.7rem;
 }
 
 .cook-title,
