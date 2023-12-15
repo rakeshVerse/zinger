@@ -2,6 +2,8 @@ import { FORKIFY_API_KEY, FORKIFY_API_URL } from './config';
 
 const recipePreviewContainer = document.querySelector('.recipe-preview-list');
 const recipePreviewInfo = document.querySelector('.preview-info');
+const recipeSearchInput = document.getElementById('search-keyword');
+recipeSearchInput.value = '';
 
 //////////////// POPUP //////////////
 
@@ -28,6 +30,15 @@ document
 /////////////// SEARCH RECIPE ////////////////
 
 // getRecipe('5ed6604591c37cdc054bcd09');
+
+const showInfo = (element, msg, color = '') => {
+  const textColor = color ? color : '#60b5ff';
+  if (element.classList.contains('hidden-info'))
+    element.classList.toggle('hidden-info');
+
+  element.style.color = color;
+  element.textContent = msg;
+};
 
 /**
  * Render the recipes in the list
@@ -67,14 +78,21 @@ const searchRecipe = async keyword => {
     const data = await res.json();
 
     if (!data.results) {
-      console.log('No recipes found for the search keyword');
+      showInfo(
+        recipePreviewInfo,
+        'No recipes found. Please try again!',
+        '#ff6946'
+      );
+      return;
     }
+
+    recipeSearchInput.value = '';
 
     const { recipes } = data.data;
 
     renderRecipeList(recipes);
   } catch (error) {
-    console.log(error);
+    showInfo(recipePreviewInfo, error, '#ff6946');
   }
 };
 
@@ -86,10 +104,13 @@ document.getElementById('search-form').addEventListener('submit', function (e) {
 
   if (keyword === '') return;
 
-  recipePreviewInfo.textContent = 'Searching...';
+  recipePreviewContainer.textContent = '';
+  showInfo(recipePreviewInfo, 'Searching...');
+
   searchRecipe(keyword);
 });
 
+//////////////////////// RECIPE ////////////////////////
 /**
  * Get recipe for given id from Forkify API
  * @param {string} id Recipe Id
