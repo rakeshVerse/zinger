@@ -1,6 +1,14 @@
-import { FORKIFY_API_KEY, FORKIFY_API_URL } from './config';
+import {
+  FORKIFY_API_KEY,
+  FORKIFY_API_URL,
+  ERROR_COLOR,
+  INFO_COLOR,
+} from './config';
 
+const recipeContainer = document.querySelector('.detail-box');
+const recipeInfo = document.querySelector('.recipe-info');
 const recipePreviewContainer = document.querySelector('.recipe-preview-list');
+const recipePreviewItem = document.querySelector('.recipe-preview-item');
 const recipePreviewInfo = document.querySelector('.preview-info');
 const recipeSearchInput = document.getElementById('search-keyword');
 recipeSearchInput.value = '';
@@ -31,8 +39,14 @@ document
 
 // getRecipe('5ed6604591c37cdc054bcd09');
 
+/**
+ *
+ * @param {HTML element} element Element in which you want to show the message
+ * @param {String} msg Message to display
+ * @param {String} color Message color
+ */
 const showInfo = (element, msg, color = '') => {
-  const textColor = color ? color : '#60b5ff';
+  const textColor = color ? color : INFO_COLOR;
   if (element.classList.contains('hidden-info'))
     element.classList.toggle('hidden-info');
 
@@ -81,7 +95,7 @@ const searchRecipe = async keyword => {
       showInfo(
         recipePreviewInfo,
         'No recipes found. Please try again!',
-        '#ff6946'
+        ERROR_COLOR
       );
       return;
     }
@@ -92,10 +106,11 @@ const searchRecipe = async keyword => {
 
     renderRecipeList(recipes);
   } catch (error) {
-    showInfo(recipePreviewInfo, error, '#ff6946');
+    showInfo(recipePreviewInfo, error, ERROR_COLOR);
   }
 };
 
+// Event
 document.getElementById('search-form').addEventListener('submit', function (e) {
   e.preventDefault();
 
@@ -111,6 +126,81 @@ document.getElementById('search-form').addEventListener('submit', function (e) {
 });
 
 //////////////////////// RECIPE ////////////////////////
+
+/**
+ * Render recipe in the recipe details view
+ * @param {Object} recipe Recipe object
+ */
+const renderRecipe = recipe => {
+  /**
+   * Generate List for ingredients
+   * @param {Array} ingredients Array of ingredients
+   */
+  const generateIngredientList = ingredients =>
+    ingredients
+      .map(ing => {
+        const { quantity, unit, description } = ing;
+        return `<li class="recipe-ingredient">${
+          quantity ? quantity : ''
+        } ${unit} ${description}</li>`;
+      })
+      .join('');
+
+  const {
+    publisher,
+    ingredients,
+    source_url,
+    image_url,
+    title,
+    servings,
+    cooking_time,
+    // id,
+  } = recipe;
+
+  const html = `
+  <div class="recipe-img-box">
+    <img
+      src="${image_url}"
+      alt=""
+      class="recipe-img"
+    />
+    <h1 class="recipe-title">${title}</h1>
+  </div>
+
+  <div class="recipe-text">
+    <div class="recipe-actions">
+      <p class="recipe-duration"><span>${cooking_time}</span> minutes</p>
+      <div class="recipe-servings-box">
+        <p class="recipe-servings"><span>${servings}</span> servings</p>
+        <a href="#" class="add-serving">+</a>
+        <a href="#" class="reduce-serving">-</a>
+      </div>
+
+      <a href="#" class="add-bookmark">Bookmark</a>
+    </div>
+
+    <div class="ingredients">
+      <h2 class="ingredients-title">Recipe Ingredients</h2>
+      <ul class="recipe-ingredient-list">${generateIngredientList(
+        ingredients
+      )}</ul>
+    </div>
+
+    <div class="cook">
+      <h2 class="cook-title">How to cook it</h2>
+      <p class="cook-text">
+        This recipe was carefully designed and tested by
+        <span> ${publisher}</span>. Please check out directions at
+        their website.
+      </p>
+      <a href="${source_url}" class="btn-direction">Direction &rightarrow;</a>
+    </div>
+  </div>`;
+
+  recipeInfo.classList.add('hidden-info');
+  recipeContainer.insertAdjacentHTML('afterbegin', html);
+};
+
 /**
  * Get recipe for given id from Forkify API
  * @param {string} id Recipe Id
@@ -118,10 +208,39 @@ document.getElementById('search-form').addEventListener('submit', function (e) {
 const getRecipe = async id => {
   try {
     const res = await fetch(`${FORKIFY_API_URL}/${id}`);
-
     const data = await res.json();
-    console.log(data);
+
+    if (data.status !== 'success') {
+      showInfo(
+        recipeInfo,
+        'Something went wrong. Please refresh the page and try again!',
+        ERROR_COLOR
+      );
+      return;
+    }
+
+    // Render recipe
+    renderRecipe(data.data.recipe);
+
+    // Push recipe id to URL
+    // pushToUrl(data.data.recipe.id)
   } catch (error) {
-    console.log(error);
+    showInfo(recipeInfo, error, ERROR_COLOR);
   }
 };
+
+// Event
+recipePreviewContainer.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const previewItem = e.target.closest('.recipe-preview-item');
+  if (!previewItem) return;
+
+  const recipeId = previewItem.dataset.id;
+
+  recipeContainer.textContent = '';
+  showInfo(recipeInfo, 'Loading...');
+
+  history.pushState({}, '', `#${recipeId}`);
+  getRecipe(recipeId);
+});
