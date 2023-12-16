@@ -37,17 +37,6 @@ body {
   display: none;
 }
 
-.btn-link:link,
-.btn-link:visited {
-  text-decoration: none;
-  color: #555;
-}
-
-.btn-link:hover,
-.btn-link:active {
-  text-decoration: underline;
-}
-
 /* HEADER */
 #app-header {
   display: flex;
@@ -120,7 +109,7 @@ body {
   flex-basis: 40rem;
   max-width: 40rem;
   background-color: aliceblue;
-  padding: 2rem 3rem;
+  padding: 2rem;
   position: relative;
 }
 
@@ -131,7 +120,7 @@ body {
 
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
+  gap: 2rem;
 }
 
 .pagination-box {
@@ -139,6 +128,24 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 1rem;
+}
+
+.btn-link {
+  text-decoration: none;
+  font-size: 1.6rem;
+  font-weight: 400;
+  padding: 0.5rem 1rem;
+  width: 12rem;
+  text-align: center;
+  background-color: #e5f3ff;
+  color: #60b5ff;
+}
+
+.btn-link:hover,
+.btn-link:active {
+  color: #888;
+  background-color: #fff;
 }
 
 .preview-info {
@@ -176,7 +183,7 @@ body {
 }
 
 .preview-title {
-  width: 24rem;
+  width: 28rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -202,7 +209,6 @@ body {
   max-width: 80rem;
   background-color: rgb(229, 243, 255);
   overflow: scroll;
-  padding-bottom: 4rem;
 }
 
 .recipe-info {
@@ -233,8 +239,7 @@ body {
 
 .recipe-img-box {
   width: auto;
-  height: 35rem;
-  margin-bottom: 3rem;
+  height: 40rem;
   position: relative;
 }
 
@@ -245,7 +250,7 @@ body {
 }
 
 .recipe-text {
-  padding: 0 5rem;
+  padding: 2rem 5rem;
 }
 
 .recipe-title {

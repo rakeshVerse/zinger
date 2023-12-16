@@ -3,15 +3,24 @@ import {
   FORKIFY_API_URL,
   ERROR_COLOR,
   INFO_COLOR,
+  RECIPE_ITEMS_PER_PAGE,
 } from './config';
 
+// Elements
 const recipeContainer = document.querySelector('.detail-box');
 const recipeInfo = document.querySelector('.recipe-info');
 const recipePreviewContainer = document.querySelector('.recipe-preview-list');
 const recipePreviewItem = document.querySelector('.recipe-preview-item');
 const recipePreviewInfo = document.querySelector('.preview-info');
 const recipeSearchInput = document.getElementById('search-keyword');
+const paginationContainer = document.querySelector('.pagination-box');
+const paginationBtnPrev = document.querySelector('.btn-pg-prev');
+const paginationBtnNext = document.querySelector('.btn-pg-next');
 recipeSearchInput.value = '';
+
+// Global variables
+const recipes = [];
+let totalRecipes;
 
 //////////////// POPUP //////////////
 
@@ -79,6 +88,7 @@ const renderRecipeList = recipes => {
   });
 
   recipePreviewInfo.classList.add('hidden-info');
+  recipePreviewContainer.textContent = '';
   recipePreviewContainer.insertAdjacentHTML('afterbegin', html);
 };
 
@@ -88,29 +98,53 @@ const renderRecipeList = recipes => {
  */
 const searchRecipe = async keyword => {
   try {
+    // Initaially hide pagination buttons
+    paginationBtnPrev.classList.add('hidden');
+    paginationBtnNext.classList.add('hidden');
+
     const res = await fetch(`${FORKIFY_API_URL}?search=${keyword}`);
     const data = await res.json();
+    totalRecipes = data.results;
 
-    if (!data.results) {
+    if (!totalRecipes) {
       showInfo(
         recipePreviewInfo,
         'No recipes found. Please try again!',
         ERROR_COLOR
       );
+
       return;
     }
 
     recipeSearchInput.value = '';
+    paginationContainer.classList.remove('hidden');
 
-    const { recipes } = data.data;
+    // Push recipes to state
+    recipes.length = 0;
+    recipes.push(...data.data.recipes);
 
-    renderRecipeList(recipes);
+    // Pagination
+    if (totalRecipes > RECIPE_ITEMS_PER_PAGE) {
+      renderRecipeList(recipes.slice(0, RECIPE_ITEMS_PER_PAGE));
+      paginationBtnNext.classList.remove('hidden');
+      paginationBtnNext.dataset.index = RECIPE_ITEMS_PER_PAGE;
+    } else {
+      renderRecipeList(recipes);
+      paginationBtnNext.classList.add('hidden');
+    }
   } catch (error) {
-    showInfo(recipePreviewInfo, error, ERROR_COLOR);
+    console.log(error);
+    showInfo(
+      recipePreviewInfo,
+      'Something went wrong! Please check your internet connection and try again.',
+      ERROR_COLOR
+    );
   }
 };
 
-// Event
+// Events
+
+// Search
 document.getElementById('search-form').addEventListener('submit', function (e) {
   e.preventDefault();
 
@@ -123,6 +157,67 @@ document.getElementById('search-form').addEventListener('submit', function (e) {
   showInfo(recipePreviewInfo, 'Searching...');
 
   searchRecipe(keyword);
+});
+
+// Pagination
+paginationContainer.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  // Guard clause
+  if (e.target === this) return;
+
+  /**
+   * Show specified pagination button
+   * @param {Element} btn Pagination button to show
+   */
+  const showPaginationBtn = btn => {
+    if (btn.classList.contains('hidden')) btn.classList.remove('hidden');
+  };
+
+  let startIndex;
+  let endIndex;
+
+  // Previous btn
+  if (e.target === paginationBtnPrev) {
+    // Get the endIndex from button data-index
+    endIndex = +paginationBtnPrev.dataset.index;
+
+    // Calculate startIndex
+    startIndex = endIndex - RECIPE_ITEMS_PER_PAGE;
+
+    // If startIndex is <= 0, then it's a first page, hide previous btn
+    if (startIndex <= 0) {
+      paginationBtnPrev.classList.add('hidden');
+    }
+
+    // Show next button
+    showPaginationBtn(paginationBtnNext);
+  }
+
+  // Next btn
+  if (e.target === paginationBtnNext) {
+    // Get start index from button data-index
+    startIndex = +paginationBtnNext.dataset.index;
+
+    // Calculate end index
+    endIndex = startIndex + RECIPE_ITEMS_PER_PAGE;
+
+    // If endIndex is greater than totalRecipes then it's a last page so hide next btn
+    if (endIndex >= totalRecipes) {
+      endIndex = totalRecipes;
+      paginationBtnNext.classList.add('hidden');
+    }
+
+    // Show previous button
+    showPaginationBtn(paginationBtnPrev);
+  }
+
+  // Add index to data attribute of buttons
+  paginationBtnPrev.dataset.index = startIndex;
+  paginationBtnNext.dataset.index = endIndex;
+
+  // Render recipes
+  renderRecipeList(recipes.slice(startIndex, endIndex));
 });
 
 //////////////////////// RECIPE ////////////////////////
@@ -193,7 +288,7 @@ const renderRecipe = recipe => {
         <span> ${publisher}</span>. Please check out directions at
         their website.
       </p>
-      <a href="${source_url}" class="btn-direction">Direction &rightarrow;</a>
+      <a href="${source_url}" target="_blank" class="btn-direction">Direction &rightarrow;</a>
     </div>
   </div>`;
 
@@ -213,7 +308,7 @@ const getRecipe = async id => {
     if (data.status !== 'success') {
       showInfo(
         recipeInfo,
-        'Something went wrong. Please refresh the page and try again!',
+        `Oops! Something went wrong while fetching the recipe. Please try again later.`,
         ERROR_COLOR
       );
       return;
@@ -225,7 +320,11 @@ const getRecipe = async id => {
     // Push recipe id to URL
     // pushToUrl(data.data.recipe.id)
   } catch (error) {
-    showInfo(recipeInfo, error, ERROR_COLOR);
+    showInfo(
+      recipeInfo,
+      'Something went wrong! Please check your internet connection.',
+      ERROR_COLOR
+    );
   }
 };
 
@@ -244,3 +343,21 @@ recipePreviewContainer.addEventListener('click', function (e) {
   history.pushState({}, '', `#${recipeId}`);
   getRecipe(recipeId);
 });
+
+/**
+ * Get recipe id from URL and fetch Recipe
+ */
+const loadRecipeForUrlId = () => {
+  const hash = window.location.hash;
+  if (!hash) return;
+
+  const id = hash.slice(1);
+  getRecipe(id);
+};
+
+///////////////////// INIT ////////////////////////////
+const init = () => {
+  loadRecipeForUrlId();
+};
+
+init();
