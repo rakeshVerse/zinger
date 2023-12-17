@@ -48,16 +48,40 @@ body {
   background: rgb(229, 243, 255);
 }
 
-#app-header .show-bookmarks {
+/* Saved recipes */
+#app-header .saved-recipes-box {
   position: relative;
+}
+
+#app-header .saved-recipes-menu {
   cursor: pointer;
 }
 
-#app-header .show-bookmarks:hover > .bookmark-box {
-  opacity: 1;
-  z-index: 1;
+#app-header .saved-recipes-list {
+  background-color: #f0f8ff;
+  position: absolute;
+  width: 39rem;
+  overflow-y: scroll;
+  height: 0;
+  transition: opacity 0.5s;
 }
 
+.saved-recipes-list:empty {
+  padding: 0;
+}
+
+.saved-recipes-list:not(empty) {
+  padding: 1.6rem;
+}
+
+#app-header .saved-recipes-box:hover > .saved-recipes-list {
+  opacity: 1;
+  z-index: 1;
+  height: fit-content;
+  max-height: 60rem;
+}
+
+/* Search */
 .search-input-box {
   position: relative;
 }
@@ -82,21 +106,14 @@ body {
   cursor: pointer;
 
   background-color: aliceblue;
-  padding: 0.7rem 1.5rem;
+  padding: 0.6rem 1.5rem;
   border-top-right-radius: 25px;
   border-bottom-right-radius: 25px;
 
   position: absolute;
-  top: 50%;
+  top: 49%;
   right: 8%;
   transform: translate(50%, -50%);
-}
-
-.bookmark-box {
-  background-color: #fff;
-  position: absolute;
-  width: 40rem;
-  padding: 1rem;
 }
 
 #app-main {
@@ -239,7 +256,7 @@ body {
 
 .recipe-img-box {
   width: auto;
-  height: 40rem;
+  height: 38rem;
   position: relative;
 }
 
@@ -258,7 +275,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #f0f8ffb0;
+  background-color: #e5f3ffc9;
   font-size: 2.6rem;
   padding: 1rem;
   text-align: center;

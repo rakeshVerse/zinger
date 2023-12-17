@@ -4,22 +4,32 @@ import {
   ERROR_COLOR,
   INFO_COLOR,
   RECIPE_ITEMS_PER_PAGE,
+  NETWORK_ERROR,
 } from './config';
 
 // Elements
 const recipeContainer = document.querySelector('.detail-box');
 const recipeInfo = document.querySelector('.recipe-info');
+
+const commonPreviewContainer = document.querySelectorAll('.recipe-list');
+
 const recipePreviewContainer = document.querySelector('.recipe-preview-list');
 const recipePreviewItem = document.querySelector('.recipe-preview-item');
 const recipePreviewInfo = document.querySelector('.preview-info');
-const recipeSearchInput = document.getElementById('search-keyword');
+
+const savedRecipesContainer = document.querySelector('.saved-recipes-list');
+// const savedRecipesInfo = document.querySelector('.saved-recipes-info');
+
 const paginationContainer = document.querySelector('.pagination-box');
 const paginationBtnPrev = document.querySelector('.btn-pg-prev');
 const paginationBtnNext = document.querySelector('.btn-pg-next');
+
+const recipeSearchInput = document.getElementById('search-keyword');
 recipeSearchInput.value = '';
 
 // Global variables
 const recipes = [];
+const savedRecipes = [];
 let totalRecipes;
 
 //////////////// POPUP //////////////
@@ -64,15 +74,18 @@ const showInfo = (element, msg, color = '') => {
 };
 
 /**
- * Render the recipes in the list
- * @param {Array} recipes Array contains recipes
+ * Generate HTML for recipe preview list item used to generate recipe item for Preview and Saved Recipe view
+ * @param {Object} recipe Recipe object
+ * @param {String} className class name for generated list item, defaults to 'recipe-preview-item' which is class name for preview list item
+ * @returns HTML string
  */
-const renderRecipeList = recipes => {
-  let html = '';
-  recipes.forEach(recipe => {
-    const { id, image_url, title, publisher } = recipe;
+const generateRecipePreviewItem = (
+  recipe,
+  className = 'recipe-preview-item'
+) => {
+  const { id, image_url, title, publisher } = recipe;
 
-    html += `<li class="recipe-item recipe-preview-item" data-id="${id}">
+  return `<li class="recipe-item ${className}" data-id="${id}">
               <a href="#" class="recipe-preview-link">
                 <img
                   class="preview-img"
@@ -85,7 +98,15 @@ const renderRecipeList = recipes => {
                 </div>
               </a>
             </li>`;
-  });
+};
+
+/**
+ * Render the recipes in the list
+ * @param {Array} recipes Array contains recipes
+ */
+const renderRecipeList = recipes => {
+  let html = '';
+  recipes.forEach(recipe => (html += generateRecipePreviewItem(recipe)));
 
   recipePreviewInfo.classList.add('hidden-info');
   recipePreviewContainer.textContent = '';
@@ -134,11 +155,7 @@ const searchRecipe = async keyword => {
     }
   } catch (error) {
     console.log(error);
-    showInfo(
-      recipePreviewInfo,
-      'Something went wrong! Please check your internet connection and try again.',
-      ERROR_COLOR
-    );
+    showInfo(recipePreviewInfo, NETWORK_ERROR, ERROR_COLOR);
   }
 };
 
@@ -271,7 +288,7 @@ const renderRecipe = recipe => {
         <a href="#" class="reduce-serving">-</a>
       </div>
 
-      <a href="#" class="add-bookmark">Bookmark</a>
+      <a href="#" class="save-recipe">Save</a>
     </div>
 
     <div class="ingredients">
@@ -314,17 +331,17 @@ const getRecipe = async id => {
       return;
     }
 
-    // Render recipe
-    renderRecipe(data.data.recipe);
+    const recipe = data.data.recipe;
 
-    // Push recipe id to URL
-    // pushToUrl(data.data.recipe.id)
+    // Render recipe
+    renderRecipe(recipe);
+
+    // Bind save recipe event
+    document
+      .querySelector('.save-recipe')
+      .addEventListener('click', e => saveRecipeHandler(e, recipe));
   } catch (error) {
-    showInfo(
-      recipeInfo,
-      'Something went wrong! Please check your internet connection.',
-      ERROR_COLOR
-    );
+    showInfo(recipeInfo, NETWORK_ERROR, ERROR_COLOR);
   }
 };
 
@@ -340,7 +357,14 @@ recipePreviewContainer.addEventListener('click', function (e) {
   recipeContainer.textContent = '';
   showInfo(recipeInfo, 'Loading...');
 
+  // Highlight current item
+  highlightItem(previewItem);
+  // previewItem.style.backgroundColor = 'red';
+
+  // Add recipeId to URL
   history.pushState({}, '', `#${recipeId}`);
+
+  // Fetch recipe
   getRecipe(recipeId);
 });
 
@@ -353,6 +377,75 @@ const loadRecipeForUrlId = () => {
 
   const id = hash.slice(1);
   getRecipe(id);
+};
+
+//////////////////////// SAVE RECIPE ////////////////////////
+
+const isSavedRecipe = recipeId => {
+  console.log('Inside isSavedRecipe(): ');
+  console.log(savedRecipes);
+
+  return !savedRecipes.every(recipe => recipe.id !== recipeId);
+};
+
+const saveRecipe = (btn, recipe) => {
+  console.log('Inside saveRecipe():');
+  // Add recipe to savedRecipes
+  savedRecipes.push(recipe);
+  console.log(savedRecipes);
+
+  // Save recipe to localStorage
+  localStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
+
+  // Change save button to 'Unsave'
+  btn.textContent = 'Unsave';
+
+  // Render recipe preview in Saved recipe view
+  savedRecipesContainer.insertAdjacentHTML(
+    'afterbegin',
+    generateRecipePreviewItem(recipe, 'saved-recipe-preview-item')
+  );
+};
+
+const unsaveRecipe = (btn, recipeId) => {
+  console.log('Inside unsaveRecipe():');
+
+  // Get recipe index using recipeId
+  const recipeIndex = savedRecipes.findIndex(recipe => recipe.id === recipeId);
+
+  // Remove recipe from savedRecipes
+  if (recipeIndex !== -1) savedRecipes.splice(recipeIndex, 1);
+  console.log('After removing recipe: ');
+  console.log(savedRecipes);
+
+  // Change 'Unsave' button to 'Save'
+  btn.textContent = 'Save';
+
+  // Remove recipe form Saved recipe view using recipeId
+  const recipeItem = savedRecipesContainer.querySelector(
+    `[data-id="${recipeId}"]`
+  );
+  console.log(recipeItem);
+
+  if (recipeItem) recipeItem.remove();
+};
+
+const saveRecipeHandler = (e, recipe) => {
+  e.preventDefault();
+
+  console.log(recipe);
+  const btn = e.target;
+  const recipeId = recipe.id;
+
+  // Check whether recipe is already saved,
+  // If yes, Unsave. Else, Save
+  if (savedRecipes.length && isSavedRecipe(recipeId)) {
+    console.log('Recipe already saved: Unsave');
+    unsaveRecipe(btn, recipeId);
+  } else {
+    console.log('Set is empty or recipe is not already saved: Save');
+    saveRecipe(btn, recipe);
+  }
 };
 
 ///////////////////// INIT ////////////////////////////
