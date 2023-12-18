@@ -346,27 +346,37 @@ const getRecipe = async id => {
 };
 
 // Event
-recipePreviewContainer.addEventListener('click', function (e) {
-  e.preventDefault();
+commonPreviewContainer.forEach(list =>
+  list.addEventListener('click', function (e) {
+    e.preventDefault();
 
-  const previewItem = e.target.closest('.recipe-preview-item');
-  if (!previewItem) return;
+    console.log('clicked elememnt:');
+    console.log(e.target);
 
-  const recipeId = previewItem.dataset.id;
+    const previewItem =
+      e.target.closest('.recipe-preview-item') ||
+      e.target.closest('.saved-recipe-preview-item');
 
-  recipeContainer.textContent = '';
-  showInfo(recipeInfo, 'Loading...');
+    console.log('preview item:');
+    console.log(previewItem);
 
-  // Highlight current item
-  highlightItem(previewItem);
-  // previewItem.style.backgroundColor = 'red';
+    if (!previewItem) return;
 
-  // Add recipeId to URL
-  history.pushState({}, '', `#${recipeId}`);
+    const recipeId = previewItem.dataset.id;
 
-  // Fetch recipe
-  getRecipe(recipeId);
-});
+    recipeContainer.textContent = '';
+    showInfo(recipeInfo, 'Loading...');
+
+    // Highlight current item
+    // highlightItem(recipeId);
+
+    // Add recipeId to URL
+    history.pushState({}, '', `#${recipeId}`);
+
+    // Fetch recipe
+    getRecipe(recipeId);
+  })
+);
 
 /**
  * Get recipe id from URL and fetch Recipe
