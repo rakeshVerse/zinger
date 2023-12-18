@@ -61,7 +61,7 @@ body {
   cursor: pointer;
 }
 
-#app-header .saved-recipes-list {
+#app-header .saved-recipe-list-box {
   background-color: #f0f8ff;
   position: absolute;
   width: 39rem;
@@ -70,15 +70,7 @@ body {
   transition: opacity 0.5s;
 }
 
-/* .saved-recipes-list:empty {
-  padding: 0;
-}
-
-.saved-recipes-list:not(empty) {
-  padding: 1.6rem;
-} */
-
-#app-header .saved-recipes-box:hover > .saved-recipes-list {
+#app-header .saved-recipes-box:hover > .saved-recipe-list-box {
   opacity: 1;
   z-index: 1;
   height: fit-content;
@@ -136,13 +128,16 @@ body {
 }
 
 .recipe-list {
-  /* 8.4rem (header) + 5rem (pagination) + 3.5rem (footer) + 2rem (aside padding) = 18.9rem */
-  height: calc(100svh - 18.9rem);
   overflow-x: scroll;
 
   display: flex;
   flex-direction: column;
   gap: 2rem;
+}
+
+.recipe-list-ht {
+  /* 8.4rem (header) + 5rem (pagination) + 3.5rem (footer) + 2rem (aside padding) = 18.9rem */
+  height: calc(100svh - 18.9rem);
 }
 
 .pagination-box {
