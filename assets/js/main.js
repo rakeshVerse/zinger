@@ -5,6 +5,7 @@ import {
   INFO_COLOR,
   RECIPE_ITEMS_PER_PAGE,
   NETWORK_ERROR,
+  LOCAL_STORAGE_KEY,
 } from './config';
 
 // Elements
@@ -80,10 +81,7 @@ const showInfo = (element, msg, color = '') => {
  * @param {String} className class name for generated list item, defaults to 'recipe-preview-item' which is class name for preview list item
  * @returns HTML string
  */
-const generateRecipePreviewItem = (
-  recipe,
-  className = 'recipe-preview-item'
-) => {
+const generateRecipePreviewItem = (recipe, className) => {
   const { id, image_url, title, publisher } = recipe;
 
   return `<li class="recipe-item ${className}" data-id="${id}">
@@ -105,13 +103,20 @@ const generateRecipePreviewItem = (
  * Render the recipes in the list
  * @param {Array} recipes Array contains recipes
  */
-const renderRecipeList = recipes => {
+const renderRecipeList = (
+  recipes,
+  infoContainer = recipePreviewInfo,
+  listContainer = recipePreviewContainer,
+  className = 'recipe-preview-item'
+) => {
   let html = '';
-  recipes.forEach(recipe => (html += generateRecipePreviewItem(recipe)));
+  recipes.forEach(
+    recipe => (html += generateRecipePreviewItem(recipe, className))
+  );
 
-  recipePreviewInfo.classList.add('hidden-info');
-  recipePreviewContainer.textContent = '';
-  recipePreviewContainer.insertAdjacentHTML('afterbegin', html);
+  infoContainer.classList.add('hidden-info');
+  listContainer.textContent = '';
+  listContainer.insertAdjacentHTML('afterbegin', html);
 };
 
 /**
@@ -276,7 +281,7 @@ const renderRecipe = recipe => {
     title,
     servings,
     cooking_time,
-    // id,
+    id,
   } = recipe;
 
   const html = `
@@ -298,7 +303,9 @@ const renderRecipe = recipe => {
         <a href="#" class="reduce-serving">-</a>
       </div>
 
-      <a href="#" class="save-recipe">Save</a>
+      <a href="#" class="save-recipe">${
+        isSavedRecipe(id) ? 'Unsave' : 'Save'
+      }</a>
     </div>
 
     <div class="ingredients">
@@ -412,7 +419,7 @@ const isSavedRecipe = recipeId => {
 };
 
 const updateLocalStorage = () =>
-  localStorage.setItem('saved-recipes', JSON.stringify(savedRecipes));
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedRecipes));
 
 const saveRecipe = (btn, recipe) => {
   console.log('Inside saveRecipe():');
@@ -449,11 +456,13 @@ const unsaveRecipe = (btn, recipeId) => {
   console.log('After removing recipe: ');
   console.log(savedRecipes);
 
-  // Update localStorage
-  updateLocalStorage();
-
-  // Show info
-  if (!savedRecipes.length) savedRecipesInfo.classList.remove('hidden-info');
+  // If no saved recipe, empty localStorage. Else, update localStorage
+  if (!savedRecipes.length) {
+    savedRecipesInfo.classList.remove('hidden-info');
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+  } else {
+    updateLocalStorage();
+  }
 
   // Change 'Unsave' button to 'Save'
   btn.textContent = 'Save';
@@ -485,8 +494,29 @@ const saveRecipeHandler = (e, recipe) => {
   }
 };
 
+const loadSavedRecipes = () => {
+  // Check if recipes exist in localStorage
+  // const savedRecipes = localStorage.getItem(LOCAL_STORAGE_KEY)
+  const localData = localStorage.getItem(LOCAL_STORAGE_KEY);
+
+  if (!localData) return;
+
+  savedRecipes.push(...JSON.parse(localData));
+
+  console.log(savedRecipes);
+
+  // If yes then, render them in Saved recipes view
+  renderRecipeList(
+    savedRecipes,
+    savedRecipesInfo,
+    savedRecipesContainer,
+    'saved-recipe-preview-item'
+  );
+};
+
 ///////////////////// INIT ////////////////////////////
 const init = () => {
+  loadSavedRecipes();
   loadRecipeForUrlId();
 };
 
