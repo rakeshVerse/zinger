@@ -18,7 +18,7 @@ const recipePreviewItem = document.querySelector('.recipe-preview-item');
 const recipePreviewInfo = document.querySelector('.preview-info');
 
 const savedRecipesContainer = document.querySelector('.saved-recipes-list');
-// const savedRecipesInfo = document.querySelector('.saved-recipes-info');
+const savedRecipesInfo = document.querySelector('.saved-recipes-info');
 
 const paginationContainer = document.querySelector('.pagination-box');
 const paginationBtnPrev = document.querySelector('.btn-pg-prev');
@@ -29,8 +29,9 @@ recipeSearchInput.value = '';
 
 // Global variables
 const recipes = [];
-const savedRecipes = [];
 let totalRecipes;
+const savedRecipes = [];
+let recipe;
 
 //////////////// POPUP //////////////
 
@@ -238,6 +239,15 @@ paginationContainer.addEventListener('click', function (e) {
 });
 
 //////////////////////// RECIPE ////////////////////////
+const highlightItem = recipeId => {
+  document.querySelectorAll('.recipe-item').forEach(item => {
+    const classList = item.classList;
+
+    item.dataset.id === recipeId
+      ? classList.add('highlight')
+      : classList.remove('highlight');
+  });
+};
 
 /**
  * Render recipe in the recipe details view
@@ -331,34 +341,37 @@ const getRecipe = async id => {
       return;
     }
 
-    const recipe = data.data.recipe;
+    const recipeObj = data.data.recipe;
 
     // Render recipe
-    renderRecipe(recipe);
+    renderRecipe(recipeObj);
 
-    // Bind save recipe event
+    // Save recipe to app state
+    recipe = recipeObj;
+
+    // Bind Save-recipe event
     document
       .querySelector('.save-recipe')
-      .addEventListener('click', e => saveRecipeHandler(e, recipe));
+      .addEventListener('click', e => saveRecipeHandler(e, recipeObj));
   } catch (error) {
     showInfo(recipeInfo, NETWORK_ERROR, ERROR_COLOR);
   }
 };
 
-// Event
+// Recipe preview view & Saved recipe view: Recipe item click event
 commonPreviewContainer.forEach(list =>
   list.addEventListener('click', function (e) {
     e.preventDefault();
 
-    console.log('clicked elememnt:');
-    console.log(e.target);
+    // console.log('clicked elememnt:');
+    // console.log(e.target);
 
     const previewItem =
       e.target.closest('.recipe-preview-item') ||
       e.target.closest('.saved-recipe-preview-item');
 
-    console.log('preview item:');
-    console.log(previewItem);
+    // console.log('preview item:');
+    // console.log(previewItem);
 
     if (!previewItem) return;
 
@@ -398,6 +411,9 @@ const isSavedRecipe = recipeId => {
   return !savedRecipes.every(recipe => recipe.id !== recipeId);
 };
 
+const updateLocalStorage = () =>
+  localStorage.setItem('saved-recipes', JSON.stringify(savedRecipes));
+
 const saveRecipe = (btn, recipe) => {
   console.log('Inside saveRecipe():');
   // Add recipe to savedRecipes
@@ -405,12 +421,17 @@ const saveRecipe = (btn, recipe) => {
   console.log(savedRecipes);
 
   // Save recipe to localStorage
-  localStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
+  updateLocalStorage();
 
   // Change save button to 'Unsave'
   btn.textContent = 'Unsave';
 
-  // Render recipe preview in Saved recipe view
+  // Saved Recipe View:
+
+  // Hide info
+  savedRecipesInfo.classList.add('hidden-info');
+
+  // Render recipe item
   savedRecipesContainer.insertAdjacentHTML(
     'afterbegin',
     generateRecipePreviewItem(recipe, 'saved-recipe-preview-item')
@@ -427,6 +448,12 @@ const unsaveRecipe = (btn, recipeId) => {
   if (recipeIndex !== -1) savedRecipes.splice(recipeIndex, 1);
   console.log('After removing recipe: ');
   console.log(savedRecipes);
+
+  // Update localStorage
+  updateLocalStorage();
+
+  // Show info
+  if (!savedRecipes.length) savedRecipesInfo.classList.remove('hidden-info');
 
   // Change 'Unsave' button to 'Save'
   btn.textContent = 'Save';

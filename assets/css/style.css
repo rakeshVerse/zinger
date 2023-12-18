@@ -37,6 +37,10 @@ body {
   display: none;
 }
 
+.highlight {
+  background-color: red;
+}
+
 /* HEADER */
 #app-header {
   display: flex;
@@ -66,19 +70,20 @@ body {
   transition: opacity 0.5s;
 }
 
-.saved-recipes-list:empty {
+/* .saved-recipes-list:empty {
   padding: 0;
 }
 
 .saved-recipes-list:not(empty) {
   padding: 1.6rem;
-}
+} */
 
 #app-header .saved-recipes-box:hover > .saved-recipes-list {
   opacity: 1;
   z-index: 1;
   height: fit-content;
   max-height: 60rem;
+  padding: 1.6rem;
 }
 
 /* Search */
