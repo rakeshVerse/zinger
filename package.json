@@ -10,5 +10,8 @@
   },
   "devDependencies": {
     "vite": "^5.0.8"
+  },
+  "dependencies": {
+    "fracty": "^1.0.11"
   }
 }

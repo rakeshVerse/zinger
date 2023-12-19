@@ -8,6 +8,8 @@ import {
   LOCAL_STORAGE_KEY,
 } from './config';
 
+import fracty from 'fracty';
+
 // Elements
 const recipeContainer = document.querySelector('.detail-box');
 const recipeInfo = document.querySelector('.recipe-info');
@@ -273,7 +275,7 @@ const renderRecipe = recipe => {
       .map(ing => {
         const { quantity, unit, description } = ing;
         return `<li class="recipe-ingredient">${
-          quantity ? quantity : ''
+          quantity ? fracty(quantity) : ''
         } ${unit} ${description}</li>`;
       })
       .join('');
@@ -301,11 +303,11 @@ const renderRecipe = recipe => {
 
   <div class="recipe-text">
     <div class="recipe-actions">
-      <p class="recipe-duration"><span>${cooking_time}</span> minutes</p>
+      <p class="recipe-duration">🕒 <span>${cooking_time}</span> minutes</p>
       <div class="recipe-servings-box">
-        <p class="recipe-servings"><span>${servings}</span> servings</p>
-        <a href="#" class="add-serving">+</a>
-        <a href="#" class="reduce-serving">-</a>
+        <p class="recipe-servings">🥣 <span>${servings}</span> servings</p>
+        <a href="#" class="add-serving">➕</a>
+        <a href="#" class="reduce-serving">➖</a>
       </div>
 
       <a href="#" class="save-recipe">${
