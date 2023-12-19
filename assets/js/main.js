@@ -32,7 +32,6 @@ recipeSearchInput.value = '';
 const recipes = [];
 let totalRecipes;
 const savedRecipes = [];
-let recipe;
 let recipeId = null;
 
 //////////////// POPUP //////////////
@@ -251,7 +250,6 @@ paginationContainer.addEventListener('click', function (e) {
 
 //////////////////////// RECIPE ////////////////////////
 const highlightItem = recipeId => {
-  console.log('highlight was called');
   document.querySelectorAll('.recipe-item').forEach(item => {
     const classList = item.classList;
 
@@ -368,6 +366,7 @@ const getRecipe = async id => {
       .querySelector('.save-recipe')
       .addEventListener('click', e => saveRecipeHandler(e, recipeObj));
   } catch (error) {
+    console.log(error);
     showInfo(recipeInfo, NETWORK_ERROR, ERROR_COLOR);
   }
 };
@@ -421,9 +420,6 @@ const loadRecipeForUrlId = () => {
 //////////////////////// SAVE RECIPE ////////////////////////
 
 const isSavedRecipe = recipeId => {
-  console.log('Inside isSavedRecipe(): ');
-  console.log(savedRecipes);
-
   return !savedRecipes.every(recipe => recipe.id !== recipeId);
 };
 
@@ -431,11 +427,8 @@ const updateLocalStorage = () =>
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedRecipes));
 
 const saveRecipe = (btn, recipe) => {
-  console.log('Inside saveRecipe():');
-
   // Add recipe to savedRecipes
   savedRecipes.push(recipe);
-  console.log(savedRecipes);
 
   // Save recipe to localStorage
   updateLocalStorage();
@@ -459,15 +452,11 @@ const saveRecipe = (btn, recipe) => {
 };
 
 const unsaveRecipe = (btn, recipeId) => {
-  console.log('Inside unsaveRecipe():');
-
   // Get recipe index using recipeId
   const recipeIndex = savedRecipes.findIndex(recipe => recipe.id === recipeId);
 
   // Remove recipe from savedRecipes
   if (recipeIndex !== -1) savedRecipes.splice(recipeIndex, 1);
-  console.log('After removing recipe: ');
-  console.log(savedRecipes);
 
   // If no saved recipe, empty localStorage. Else, update localStorage
   if (!savedRecipes.length) {
@@ -484,7 +473,6 @@ const unsaveRecipe = (btn, recipeId) => {
   const recipeItem = savedRecipesContainer.querySelector(
     `[data-id="${recipeId}"]`
   );
-  console.log(recipeItem);
 
   if (recipeItem) recipeItem.remove();
 };
@@ -492,17 +480,14 @@ const unsaveRecipe = (btn, recipeId) => {
 const saveRecipeHandler = (e, recipe) => {
   e.preventDefault();
 
-  console.log(recipe);
   const btn = e.target;
   const recipeId = recipe.id;
 
   // Check whether recipe is already saved,
   // If yes, Unsave. Else, Save
   if (savedRecipes.length && isSavedRecipe(recipeId)) {
-    console.log('Recipe already saved: Unsave');
     unsaveRecipe(btn, recipeId);
   } else {
-    console.log('Set is empty or recipe is not already saved: Save');
     saveRecipe(btn, recipe);
   }
 };
@@ -515,8 +500,6 @@ const loadSavedRecipes = () => {
   if (!localData) return;
 
   savedRecipes.push(...JSON.parse(localData));
-
-  console.log(savedRecipes);
 
   // If yes then, render them in Saved recipes view
   renderRecipeList(
