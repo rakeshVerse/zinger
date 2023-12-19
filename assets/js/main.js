@@ -33,6 +33,7 @@ const recipes = [];
 let totalRecipes;
 const savedRecipes = [];
 let recipe;
+let recipeId = null;
 
 //////////////// POPUP //////////////
 
@@ -117,6 +118,11 @@ const renderRecipeList = (
   infoContainer.classList.add('hidden-info');
   listContainer.textContent = '';
   listContainer.insertAdjacentHTML('afterbegin', html);
+
+  // Highlight recipe item
+  // 1. Saved recipes view: When page loads with recipeId
+  // 2. Recipe preview view: When user searches or click on pagination button
+  if (recipeId) highlightItem(recipeId);
 };
 
 /**
@@ -245,6 +251,7 @@ paginationContainer.addEventListener('click', function (e) {
 
 //////////////////////// RECIPE ////////////////////////
 const highlightItem = recipeId => {
+  console.log('highlight was called');
   document.querySelectorAll('.recipe-item').forEach(item => {
     const classList = item.classList;
 
@@ -354,7 +361,7 @@ const getRecipe = async id => {
     renderRecipe(recipeObj);
 
     // Save recipe to app state
-    recipe = recipeObj;
+    // recipe = recipeObj;
 
     // Bind Save-recipe event
     document
@@ -370,31 +377,28 @@ commonPreviewContainer.forEach(list =>
   list.addEventListener('click', function (e) {
     e.preventDefault();
 
-    // console.log('clicked elememnt:');
-    // console.log(e.target);
-
     const previewItem =
       e.target.closest('.recipe-preview-item') ||
       e.target.closest('.saved-recipe-preview-item');
 
-    // console.log('preview item:');
-    // console.log(previewItem);
-
     if (!previewItem) return;
 
-    const recipeId = previewItem.dataset.id;
+    const id = previewItem.dataset.id;
 
     recipeContainer.textContent = '';
     showInfo(recipeInfo, 'Loading...');
 
-    // Highlight current item
-    // highlightItem(recipeId);
+    // Store recipe id to app state
+    recipeId = id;
 
-    // Add recipeId to URL
-    history.pushState({}, '', `#${recipeId}`);
+    // Highlight current item
+    highlightItem(id);
+
+    // Add recipe id to URL
+    history.pushState({}, '', `#${id}`);
 
     // Fetch recipe
-    getRecipe(recipeId);
+    getRecipe(id);
   })
 );
 
@@ -406,6 +410,11 @@ const loadRecipeForUrlId = () => {
   if (!hash) return;
 
   const id = hash.slice(1);
+
+  // Store recipe id to app state
+  recipeId = id;
+
+  // Fetch & render recipe
   getRecipe(id);
 };
 
@@ -423,6 +432,7 @@ const updateLocalStorage = () =>
 
 const saveRecipe = (btn, recipe) => {
   console.log('Inside saveRecipe():');
+
   // Add recipe to savedRecipes
   savedRecipes.push(recipe);
   console.log(savedRecipes);
@@ -440,9 +450,12 @@ const saveRecipe = (btn, recipe) => {
 
   // Render recipe item
   savedRecipesContainer.insertAdjacentHTML(
-    'afterbegin',
+    'beforeend',
     generateRecipePreviewItem(recipe, 'saved-recipe-preview-item')
   );
+
+  // Highlight recipt item
+  highlightItem(recipe.id);
 };
 
 const unsaveRecipe = (btn, recipeId) => {
@@ -516,8 +529,8 @@ const loadSavedRecipes = () => {
 
 ///////////////////// INIT ////////////////////////////
 const init = () => {
-  loadSavedRecipes();
   loadRecipeForUrlId();
+  loadSavedRecipes();
 };
 
 init();
