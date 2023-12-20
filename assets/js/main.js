@@ -35,6 +35,7 @@ const recipes = [];
 let totalRecipes;
 const savedRecipes = [];
 let recipeId = null;
+let servingsCounter;
 
 //////////////// POPUP //////////////
 
@@ -274,9 +275,9 @@ const renderRecipe = recipe => {
     ingredients
       .map(ing => {
         const { quantity, unit, description } = ing;
-        return `<li class="recipe-ingredient">${
+        return `<li class="recipe-ingredient"><span class="ing-quantity">${
           quantity ? fracty(quantity) : ''
-        } ${unit} ${description}</li>`;
+        } </span> ${unit} ${description}</li>`;
       })
       .join('');
 
@@ -290,6 +291,9 @@ const renderRecipe = recipe => {
     cooking_time,
     id,
   } = recipe;
+
+  // Add servings to app state
+  servingsCounter = servings;
 
   const html = `
   <div class="recipe-img-box">
@@ -306,8 +310,10 @@ const renderRecipe = recipe => {
       <p class="recipe-duration">🕒 <span>${cooking_time}</span> minutes</p>
       <div class="recipe-servings-box">
         <p class="recipe-servings">🥣 <span>${servings}</span> servings</p>
-        <a href="#" class="add-serving">➕</a>
-        <a href="#" class="reduce-serving">➖</a>
+        <div class = "update-ing-btns">
+          <a href="#" class="increase-servings">➕</a>
+          <a href="#" class="decrease-servings">➖</a>
+        </div>
       </div>
 
       <a href="#" class="save-recipe">${
@@ -367,6 +373,11 @@ const getRecipe = async id => {
     document
       .querySelector('.save-recipe')
       .addEventListener('click', e => saveRecipeHandler(e, recipeObj));
+
+    // Bind update servings event
+    document
+      .querySelector('.update-ing-btns')
+      .addEventListener('click', e => scaleIngredientsCB(e, recipeObj));
   } catch (error) {
     console.log(error);
     showInfo(recipeInfo, NETWORK_ERROR, ERROR_COLOR);
@@ -417,6 +428,52 @@ const loadRecipeForUrlId = () => {
 
   // Fetch & render recipe
   getRecipe(id);
+};
+
+//////////////////////// SERVINGS ////////////////////////
+
+const updateServingsView = (newServings, scaledIngredients) => {
+  document.querySelector('.recipe-servings span').textContent = newServings;
+  const ingListContainer = document.querySelector('.recipe-ingredient-list');
+
+  const ingQuantityContainers =
+    ingListContainer.getElementsByClassName('ing-quantity');
+  console.log(ingQuantityContainers);
+
+  scaledIngredients.forEach(
+    (quantity, i) =>
+      (ingQuantityContainers[i].textContent = quantity ? fracty(quantity) : '')
+  );
+};
+
+const scaleIngredients = (originalServings, newServings, ingredients) => {
+  console.log({ originalServings, newServings, ingredients });
+  const scaleFactor = newServings / originalServings;
+
+  return ingredients.map(ing => scaleFactor * ing.quantity);
+};
+
+const scaleIngredientsCB = (e, recipe) => {
+  e.preventDefault();
+
+  console.log(e.target);
+  if (e.target.classList.contains('update-ing-btns')) return;
+
+  let newServings;
+  const { servings, ingredients } = recipe;
+
+  if (e.target.classList.contains('increase-servings'))
+    newServings = ++servingsCounter;
+  if (e.target.classList.contains('decrease-servings'))
+    newServings = servingsCounter === 1 ? servingsCounter : --servingsCounter; // ensures that newServings is atleast 1
+
+  const scaledIngredients = scaleIngredients(
+    servings,
+    newServings,
+    ingredients
+  );
+
+  updateServingsView(newServings, scaledIngredients);
 };
 
 //////////////////////// SAVE RECIPE ////////////////////////
