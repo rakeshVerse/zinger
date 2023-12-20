@@ -375,10 +375,92 @@ body {
 #popup header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   padding: 2rem;
 }
 
+#popup header h1 {
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 3.4rem;
+}
+
 .btn-close-popup {
   cursor: pointer;
+  font-size: 3rem;
+  font-weight: 400;
+}
+
+#popup main {
+  padding: 2rem 0;
+  text-align: center;
+}
+
+/* form */
+#add-recipe .add-recipe-sections {
+  padding: 2rem;
+
+  display: flex;
+  gap: 2rem;
+}
+
+#add-recipe .recipe-data,
+#add-recipe .ingredients-data {
+  flex-basis: 50rem;
+  text-align: left;
+  /* background-color: red; */
+}
+
+#add-recipe .add-recipe-frm-head {
+  font-weight: 400;
+  font-size: 2.2rem;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+#add-recipe .inputs {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.8rem;
+}
+
+#add-recipe input {
+  border: 1px solid #e5f3ff;
+  outline: none;
+  padding: 0.8rem 2rem;
+  font-size: 1.6rem;
+  color: #333;
+  border-radius: 0.5rem;
+  font-family: 'Roboto', sans-serif;
+  width: 36rem;
+}
+
+#add-recipe input:focus {
+  outline: 1.5px solid #e5f3ff;
+}
+
+#add-recipe label {
+  display: inline-block;
+  font-size: 1.6rem;
+  width: 10rem;
+  font-weight: 400;
+}
+
+.btn-submit-recipe {
+  text-transform: uppercase;
+  font-family: 'Roboto', sans-serif;
+  outline: none;
+  border: 1px solid #999;
+  background-color: #e5f3ff;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  margin-top: 2rem;
+  font-size: 2.2rem;
+  font-weight: 300;
+  transition: transform 0.2s;
+}
+
+.btn-submit-recipe:hover {
+  transform: scale(1.05);
 }

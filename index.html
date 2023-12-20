@@ -88,9 +88,116 @@
     <div id="backdrop" class="hidden-popup"></div>
     <div id="popup" class="hidden-popup">
       <header>
-        <h1>Hi This is a popup</h1>
+        <h1>Add a recipe</h1>
         <span class="btn-close-popup">x</span>
       </header>
+      <main>
+        <form action="" id="add-recipe">
+          <div class="add-recipe-sections">
+            <section class="recipe-data">
+              <h2 class="add-recipe-frm-head">Recipe Data</h2>
+
+              <div class="inputs">
+                <div class="frm-inp-box">
+                  <label for="inp-title">Title</label>
+                  <input type="text" name="inp-title" id="inp-title" />
+                </div>
+
+                <div class="frm-inp-box">
+                  <label for="inp-url">URL</label>
+                  <input type="text" name="inp-url" id="inp-url" />
+                </div>
+
+                <div class="frm-inp-box">
+                  <label for="inp-img-url">Image URL</label>
+                  <input type="text" name="inp-img-url" id="inp-img-url" />
+                </div>
+
+                <div class="frm-inp-box">
+                  <label for="inp-publisher">Publisher</label>
+                  <input type="text" name="inp-publisher" id="inp-publisher" />
+                </div>
+
+                <div class="frm-inp-box">
+                  <label for="inp-duration">Prep time</label>
+                  <input type="number" name="inp-duration" id="inp-duration" />
+                </div>
+
+                <div class="frm-inp-box">
+                  <label for="inp-servings">Servings</label>
+                  <input type="number" name="inp-servings" id="inp-servings" />
+                </div>
+              </div>
+            </section>
+            <section class="ingredients-data">
+              <h2 class="add-recipe-frm-head">Ingredients</h2>
+
+              <div class="inputs">
+                <div class="frm-inp-box">
+                  <label for="inp-ing-1">Ingredient 1</label>
+                  <input
+                    type="text"
+                    name="inp-ing-1"
+                    placeholder="Format: 'Quantity, Unit, Description'"
+                    id="inp-ing-1"
+                  />
+                </div>
+
+                <div class="frm-inp-box">
+                  <label for="inp-ing-2">Ingredient 2</label>
+                  <input
+                    type="text"
+                    name="inp-ing-2"
+                    placeholder="Format: 'Quantity, Unit, Description'"
+                    id="inp-ing-2"
+                  />
+                </div>
+
+                <div class="frm-inp-box">
+                  <label for="inp-ing-3">Ingredient 3</label>
+                  <input
+                    type="text"
+                    name="inp-ing-3"
+                    placeholder="Format: 'Quantity, Unit, Description'"
+                    id="inp-ing-3"
+                  />
+                </div>
+
+                <div class="frm-inp-box">
+                  <label for="inp-ing-4">Ingredient 4</label>
+                  <input
+                    type="text"
+                    name="inp-ing-4"
+                    placeholder="Format: 'Quantity, Unit, Description'"
+                    id="inp-ing-4"
+                  />
+                </div>
+
+                <div class="frm-inp-box">
+                  <label for="inp-ing-5">Ingredient 5</label>
+                  <input
+                    type="text"
+                    name="inp-ing-5"
+                    placeholder="Format: 'Quantity, Unit, Description'"
+                    id="inp-ing-5"
+                  />
+                </div>
+
+                <div class="frm-inp-box">
+                  <label for="inp-ing-6">Ingredient 6</label>
+                  <input
+                    type="text"
+                    name="inp-ing-6"
+                    placeholder="Format: 'Quantity, Unit, Description'"
+                    id="inp-ing-6"
+                  />
+                </div>
+              </div>
+            </section>
+          </div>
+          <button type="submit" class="btn-submit-recipe">Upload</button>
+        </form>
+      </main>
     </div>
   </body>
 </html>
