@@ -438,7 +438,6 @@ const updateServingsView = (newServings, scaledIngredients) => {
 
   const ingQuantityContainers =
     ingListContainer.getElementsByClassName('ing-quantity');
-  console.log(ingQuantityContainers);
 
   scaledIngredients.forEach(
     (quantity, i) =>
@@ -447,7 +446,6 @@ const updateServingsView = (newServings, scaledIngredients) => {
 };
 
 const scaleIngredients = (originalServings, newServings, ingredients) => {
-  console.log({ originalServings, newServings, ingredients });
   const scaleFactor = newServings / originalServings;
 
   return ingredients.map(ing => scaleFactor * ing.quantity);
@@ -456,7 +454,6 @@ const scaleIngredients = (originalServings, newServings, ingredients) => {
 const scaleIngredientsCB = (e, recipe) => {
   e.preventDefault();
 
-  console.log(e.target);
   if (e.target.classList.contains('update-ing-btns')) return;
 
   let newServings;
