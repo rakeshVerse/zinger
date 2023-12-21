@@ -6,6 +6,7 @@ import {
   RECIPE_ITEMS_PER_PAGE,
   NETWORK_ERROR,
   LOCAL_STORAGE_KEY,
+  ING_START_INDEX,
 } from './config';
 
 import fracty from 'fracty';
@@ -27,6 +28,12 @@ const paginationContainer = document.querySelector('.pagination-box');
 const paginationBtnPrev = document.querySelector('.btn-pg-prev');
 const paginationBtnNext = document.querySelector('.btn-pg-next');
 
+const openPopupBtn = document.querySelector('.btn-open-popup');
+const closePopupBtn = document.querySelector('.btn-close-popup');
+const popupInfo = document.querySelector('#popup .popup-info');
+const addRecipeForm = document.getElementById('add-recipe');
+const addRecipeSubmitBtn = document.querySelector('#popup .btn-submit-recipe');
+
 const recipeSearchInput = document.getElementById('search-keyword');
 recipeSearchInput.value = '';
 
@@ -36,28 +43,6 @@ let totalRecipes;
 const savedRecipes = [];
 let recipeId = null;
 let servingsCounter;
-
-//////////////// POPUP //////////////
-
-const togglePopup = () => {
-  const popup = document.getElementById('popup');
-  const backdrop = document.getElementById('backdrop');
-  popup.classList.toggle('hidden-popup');
-  backdrop.classList.toggle('hidden-popup');
-};
-
-document
-  .querySelector('.btn-open-popup')
-  .addEventListener('click', function (e) {
-    e.preventDefault();
-    togglePopup();
-  });
-
-document
-  .querySelector('.btn-close-popup')
-  .addEventListener('click', function () {
-    togglePopup();
-  });
 
 /////////////// SEARCH RECIPE ////////////////
 
@@ -69,12 +54,11 @@ document
  * @param {String} msg Message to display
  * @param {String} color Message color
  */
-const showInfo = (element, msg, color = '') => {
-  const textColor = color ? color : INFO_COLOR;
+const showInfo = (element, msg, fontColor = INFO_COLOR) => {
   if (element.classList.contains('hidden-info'))
     element.classList.toggle('hidden-info');
 
-  element.style.color = color;
+  element.style.color = fontColor;
   element.textContent = msg;
 };
 
@@ -341,6 +325,16 @@ const renderRecipe = recipe => {
 
   recipeInfo.classList.add('hidden-info');
   recipeContainer.insertAdjacentHTML('afterbegin', html);
+
+  // Bind Save-recipe event
+  document
+    .querySelector('.save-recipe')
+    .addEventListener('click', e => saveRecipeHandler(e, recipe));
+
+  // Bind update servings event
+  document
+    .querySelector('.update-ing-btns')
+    .addEventListener('click', e => scaleIngredientsCB(e, recipe));
 };
 
 /**
@@ -368,16 +362,6 @@ const getRecipe = async id => {
 
     // Save recipe to app state
     // recipe = recipeObj;
-
-    // Bind Save-recipe event
-    document
-      .querySelector('.save-recipe')
-      .addEventListener('click', e => saveRecipeHandler(e, recipeObj));
-
-    // Bind update servings event
-    document
-      .querySelector('.update-ing-btns')
-      .addEventListener('click', e => scaleIngredientsCB(e, recipeObj));
   } catch (error) {
     console.log(error);
     showInfo(recipeInfo, NETWORK_ERROR, ERROR_COLOR);
@@ -490,7 +474,7 @@ const saveRecipe = (btn, recipe) => {
   updateLocalStorage();
 
   // Change save button to 'Unsave'
-  btn.textContent = 'Unsave';
+  if (btn) btn.textContent = 'Unsave';
 
   // Saved Recipe View:
 
@@ -565,6 +549,133 @@ const loadSavedRecipes = () => {
     'saved-recipe-preview-item'
   );
 };
+
+///////////////////// ADD RECIPE POPUP ////////////////////////////
+
+const clearFormInputs = form =>
+  form.querySelectorAll('input').forEach(inp => (inp.value = ''));
+
+const togglePopup = () => {
+  const popup = document.getElementById('popup');
+  const backdrop = document.getElementById('backdrop');
+  popup.classList.toggle('hidden-popup');
+  backdrop.classList.toggle('hidden-popup');
+};
+
+openPopupBtn.addEventListener('click', function (e) {
+  e.preventDefault();
+  // clearFormInputs(addRecipeForm);
+  popupInfo.classList.add('hidden-info');
+  addRecipeSubmitBtn.disabled = false;
+  togglePopup();
+});
+
+closePopupBtn.addEventListener('click', function (e) {
+  e.preventDefault();
+  togglePopup();
+});
+
+const validateIngredients = ingredients => {
+  const validIngredients = [];
+  const length = ingredients.length;
+
+  for (let i = 0; i < length; i++) {
+    // Ingredient format: Quantity (can be empty), Unit (can be empty) , description (required)
+    const details = ingredients[i][1];
+    const ingParts = details.split(',');
+
+    if (ingParts.length !== 3 || ingParts[2].trim() === '') {
+      showInfo(popupInfo, 'Invalid ingredient format!', ERROR_COLOR);
+      return false;
+    }
+
+    validIngredients.push({
+      quantity: ingParts[0] ? +ingParts[0] : null,
+      unit: ingParts[1],
+      description: ingParts[2],
+    });
+  }
+
+  return validIngredients;
+};
+
+const uploadRecipe = async recipe => {
+  try {
+    const res = await fetch(`${FORKIFY_API_URL}?key=${FORKIFY_API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(recipe),
+    });
+
+    if (!res.ok) throw new Error(`${res.status}- ${res.statusText}`);
+
+    const jsonRes = await res.json();
+    if (jsonRes.status === 'fail') throw new Error(`${jsonRes.message}`);
+
+    showInfo(popupInfo, 'Congrats! Your recipe is uploaded successfully!');
+
+    // Hide form
+    setTimeout(togglePopup, 3000);
+
+    const recipeObj = jsonRes.data.recipe;
+    console.log(recipeObj);
+
+    recipeContainer.textContent = '';
+    showInfo(recipeInfo, 'Loading...');
+
+    // Bookmark recipe
+    saveRecipe(undefined, recipeObj);
+
+    // Render recipe in Recipe view
+    renderRecipe(recipeObj);
+
+    // Add recipe id to URL
+    history.pushState({}, '', `#${recipeObj.id}`);
+  } catch (error) {
+    console.log(error);
+    showInfo(popupInfo, error, ERROR_COLOR);
+  }
+};
+
+// prevent submitting form when hit 'enter' on input
+addRecipeForm.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') e.preventDefault();
+});
+
+// form submit
+addRecipeForm.addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  showInfo(popupInfo, 'Processing...');
+  this.disabled = true;
+
+  const formDataArr = [...new FormData(addRecipeForm)];
+
+  const ingredients = formDataArr.filter(
+    inp => inp[0].startsWith('inp-ing') && inp[1].trim() !== ''
+  );
+
+  if (!ingredients.length) {
+    showInfo(
+      popupInfo,
+      'You must provide at least one ingredient!',
+      ERROR_COLOR
+    );
+    return;
+  }
+
+  // Validate ingredient
+  const validIngredients = validateIngredients(ingredients);
+  if (!validIngredients) return;
+
+  // Create recipe object
+  const recipe = formDataArr.filter(inp => !inp[0].startsWith('inp-ing'));
+  const recipeObj = Object.fromEntries(recipe);
+  recipeObj.ingredients = validIngredients;
+
+  // Pass data to api
+  uploadRecipe(recipeObj);
+});
 
 ///////////////////// INIT ////////////////////////////
 const init = () => {

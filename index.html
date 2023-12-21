@@ -91,7 +91,10 @@
         <h1>Add a recipe</h1>
         <span class="btn-close-popup">x</span>
       </header>
+
       <main>
+        <div class="popup-info hidden-info">This is popup info.</div>
+
         <form action="" id="add-recipe">
           <div class="add-recipe-sections">
             <section class="recipe-data">
@@ -100,35 +103,72 @@
               <div class="inputs">
                 <div class="frm-inp-box">
                   <label for="inp-title">Title</label>
-                  <input type="text" name="inp-title" id="inp-title" />
+                  <input
+                    type="text"
+                    name="title"
+                    id="inp-title"
+                    value="Test-recipe"
+                    required
+                  />
                 </div>
 
                 <div class="frm-inp-box">
                   <label for="inp-url">URL</label>
-                  <input type="text" name="inp-url" id="inp-url" />
+                  <input
+                    type="text"
+                    name="source_url"
+                    id="inp-url"
+                    value="test-url"
+                    required
+                  />
                 </div>
 
                 <div class="frm-inp-box">
                   <label for="inp-img-url">Image URL</label>
-                  <input type="text" name="inp-img-url" id="inp-img-url" />
+                  <input
+                    type="text"
+                    name="image_url"
+                    id="inp-img-url"
+                    value="https://images.unsplash.com/photo-1546069901-d5bfd2cbfb1f?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    required
+                  />
                 </div>
 
                 <div class="frm-inp-box">
                   <label for="inp-publisher">Publisher</label>
-                  <input type="text" name="inp-publisher" id="inp-publisher" />
+                  <input
+                    type="text"
+                    name="publisher"
+                    id="inp-publisher"
+                    value="Test publisher"
+                    required
+                  />
                 </div>
 
                 <div class="frm-inp-box">
                   <label for="inp-duration">Prep time</label>
-                  <input type="number" name="inp-duration" id="inp-duration" />
+                  <input
+                    type="number"
+                    name="cooking_time"
+                    id="inp-duration"
+                    value="20"
+                    required
+                  />
                 </div>
 
                 <div class="frm-inp-box">
                   <label for="inp-servings">Servings</label>
-                  <input type="number" name="inp-servings" id="inp-servings" />
+                  <input
+                    type="number"
+                    name="servings"
+                    id="inp-servings"
+                    value="4"
+                    required
+                  />
                 </div>
               </div>
             </section>
+
             <section class="ingredients-data">
               <h2 class="add-recipe-frm-head">Ingredients</h2>
 
@@ -140,6 +180,8 @@
                     name="inp-ing-1"
                     placeholder="Format: 'Quantity, Unit, Description'"
                     id="inp-ing-1"
+                    value="4,,Eggs"
+                    required
                   />
                 </div>
 
@@ -150,6 +192,7 @@
                     name="inp-ing-2"
                     placeholder="Format: 'Quantity, Unit, Description'"
                     id="inp-ing-2"
+                    value=".5,kg,Sugar"
                   />
                 </div>
 
@@ -195,6 +238,7 @@
               </div>
             </section>
           </div>
+
           <button type="submit" class="btn-submit-recipe">Upload</button>
         </form>
       </main>

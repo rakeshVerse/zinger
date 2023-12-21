@@ -390,11 +390,29 @@ body {
   cursor: pointer;
   font-size: 3rem;
   font-weight: 400;
+  border: 1px solid #888;
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+}
+
+.btn-close-popup:hover {
+  color: #555;
 }
 
 #popup main {
   padding: 2rem 0;
   text-align: center;
+}
+
+#popup .popup-info {
+  margin-bottom: 1rem;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 2rem;
 }
 
 /* form */
@@ -409,7 +427,6 @@ body {
 #add-recipe .ingredients-data {
   flex-basis: 50rem;
   text-align: left;
-  /* background-color: red; */
 }
 
 #add-recipe .add-recipe-frm-head {
@@ -433,7 +450,7 @@ body {
   color: #333;
   border-radius: 0.5rem;
   font-family: 'Roboto', sans-serif;
-  width: 36rem;
+  width: 35rem;
 }
 
 #add-recipe input:focus {
@@ -443,11 +460,11 @@ body {
 #add-recipe label {
   display: inline-block;
   font-size: 1.6rem;
-  width: 10rem;
+  width: 11rem;
   font-weight: 400;
 }
 
-.btn-submit-recipe {
+#add-recipe .btn-submit-recipe {
   text-transform: uppercase;
   font-family: 'Roboto', sans-serif;
   outline: none;
@@ -458,9 +475,9 @@ body {
   margin-top: 2rem;
   font-size: 2.2rem;
   font-weight: 300;
-  transition: transform 0.2s;
+  transition: transform 0.5s;
 }
 
-.btn-submit-recipe:hover {
+#add-recipe .btn-submit-recipe:hover {
   transform: scale(1.05);
 }
