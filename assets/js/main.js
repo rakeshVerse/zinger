@@ -7,6 +7,7 @@ import {
   NETWORK_ERROR,
   LOCAL_STORAGE_KEY,
   ING_START_INDEX,
+  POPUP_HIDE_SECONDS,
 } from './config';
 
 import fracty from 'fracty';
@@ -44,9 +45,32 @@ const savedRecipes = [];
 let recipeId = null;
 let servingsCounter;
 
-/////////////// SEARCH RECIPE ////////////////
+/////////////// GENERAL ////////////////
+const AJAX = async (url, data = undefined) => {
+  try {
+    const res = await fetch(
+      url,
+      data
+        ? {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          }
+        : {}
+    );
 
-// getRecipe('5ed6604591c37cdc054bcd09');
+    if (!res.ok)
+      throw new Error(`Something went wrong. Invalid request (${res.status})!`);
+
+    const jsonRes = await res.json();
+    if (jsonRes.status !== 'success')
+      throw new Error(`An error occurred! ${jsonRes.message}`);
+
+    return jsonRes;
+  } catch (error) {
+    throw error;
+  }
+};
 
 /**
  *
@@ -61,6 +85,10 @@ const showInfo = (element, msg, fontColor = INFO_COLOR) => {
   element.style.color = fontColor;
   element.textContent = msg;
 };
+
+/////////////// SEARCH RECIPE ////////////////
+
+// getRecipe('5ed6604591c37cdc054bcd09');
 
 /**
  * Generate HTML for recipe preview list item used to generate recipe item for Preview and Saved Recipe view
@@ -121,26 +149,19 @@ const searchRecipe = async keyword => {
     paginationBtnPrev.classList.add('hidden');
     paginationBtnNext.classList.add('hidden');
 
-    const res = await fetch(`${FORKIFY_API_URL}?search=${keyword}`);
-    const data = await res.json();
-    totalRecipes = data.results;
+    const jsonData = await AJAX(
+      `${FORKIFY_API_URL}?search=${keyword}&key=${FORKIFY_API_KEY}`
+    );
+    totalRecipes = jsonData.results;
 
-    if (!totalRecipes) {
-      showInfo(
-        recipePreviewInfo,
-        'No recipes found. Please try again!',
-        ERROR_COLOR
-      );
-
-      return;
-    }
+    if (!totalRecipes) throw new Error('No recipes found. Please try again!');
 
     recipeSearchInput.value = '';
     paginationContainer.classList.remove('hidden');
 
     // Push recipes to state
     recipes.length = 0;
-    recipes.push(...data.data.recipes);
+    recipes.push(...jsonData.data.recipes);
 
     // Pagination
     if (totalRecipes > RECIPE_ITEMS_PER_PAGE) {
@@ -152,8 +173,8 @@ const searchRecipe = async keyword => {
       paginationBtnNext.classList.add('hidden');
     }
   } catch (error) {
-    console.log(error);
-    showInfo(recipePreviewInfo, NETWORK_ERROR, ERROR_COLOR);
+    console.dir(error);
+    showInfo(recipePreviewInfo, error.message, ERROR_COLOR);
   }
 };
 
@@ -343,19 +364,11 @@ const renderRecipe = recipe => {
  */
 const getRecipe = async id => {
   try {
-    const res = await fetch(`${FORKIFY_API_URL}/${id}`);
-    const data = await res.json();
+    const jsonData = await AJAX(
+      `${FORKIFY_API_URL}/${id}?key=${FORKIFY_API_KEY}`
+    );
 
-    if (data.status !== 'success') {
-      showInfo(
-        recipeInfo,
-        `Oops! Something went wrong while fetching the recipe. Please try again later.`,
-        ERROR_COLOR
-      );
-      return;
-    }
-
-    const recipeObj = data.data.recipe;
+    const recipeObj = jsonData.data.recipe;
 
     // Render recipe
     renderRecipe(recipeObj);
@@ -363,8 +376,8 @@ const getRecipe = async id => {
     // Save recipe to app state
     // recipe = recipeObj;
   } catch (error) {
-    console.log(error);
-    showInfo(recipeInfo, NETWORK_ERROR, ERROR_COLOR);
+    console.dir(error);
+    showInfo(recipeInfo, error.message, ERROR_COLOR);
   }
 };
 
@@ -601,23 +614,17 @@ const validateIngredients = ingredients => {
 
 const uploadRecipe = async recipe => {
   try {
-    const res = await fetch(`${FORKIFY_API_URL}?key=${FORKIFY_API_KEY}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(recipe),
-    });
-
-    if (!res.ok) throw new Error(`${res.status}- ${res.statusText}`);
-
-    const jsonRes = await res.json();
-    if (jsonRes.status === 'fail') throw new Error(`${jsonRes.message}`);
+    const jsonData = await AJAX(
+      `${FORKIFY_API_URL}?key=${FORKIFY_API_KEY}`,
+      recipe
+    );
 
     showInfo(popupInfo, 'Congrats! Your recipe is uploaded successfully!');
 
     // Hide form
-    setTimeout(togglePopup, 3000);
+    setTimeout(togglePopup, 1000 * POPUP_HIDE_SECONDS);
 
-    const recipeObj = jsonRes.data.recipe;
+    const recipeObj = jsonData.data.recipe;
     console.log(recipeObj);
 
     recipeContainer.textContent = '';
@@ -632,8 +639,8 @@ const uploadRecipe = async recipe => {
     // Add recipe id to URL
     history.pushState({}, '', `#${recipeObj.id}`);
   } catch (error) {
-    console.log(error);
-    showInfo(popupInfo, error, ERROR_COLOR);
+    console.dir(error);
+    showInfo(popupInfo, error.message, ERROR_COLOR);
   }
 };
 
