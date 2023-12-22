@@ -97,7 +97,7 @@ const showInfo = (element, msg, fontColor = INFO_COLOR) => {
  * @returns HTML string
  */
 const generateRecipePreviewItem = (recipe, className) => {
-  const { id, image_url, title, publisher } = recipe;
+  const { id, image_url, title, publisher, key } = recipe;
 
   return `<li class="recipe-item ${className}" data-id="${id}">
               <a href="#" class="recipe-preview-link">
@@ -108,7 +108,10 @@ const generateRecipePreviewItem = (recipe, className) => {
                 />
                 <div class="preview-text">
                   <p class="preview-title">${title}</p>
-                  <p class="preview-publisher">${publisher}</p>
+                  <p class="preview-publisher">
+                  <span>${publisher}</span>
+                  ${key ? '<span class="preview-user">👤</span>' : ''}
+                  </p>
                 </div>
               </a>
             </li>`;
@@ -294,6 +297,7 @@ const renderRecipe = recipe => {
     title,
     servings,
     cooking_time,
+    key,
     id,
   } = recipe;
 
@@ -321,6 +325,8 @@ const renderRecipe = recipe => {
         </div>
       </div>
 
+      ${key ? '<span class="recipe-user">👤</span>' : ''}
+      
       <a href="#" class="save-recipe">${
         isSavedRecipe(id) ? 'Unsave' : 'Save'
       }</a>
@@ -625,10 +631,14 @@ const uploadRecipe = async recipe => {
     setTimeout(togglePopup, 1000 * POPUP_HIDE_SECONDS);
 
     const recipeObj = jsonData.data.recipe;
+    const id = recipeObj.id;
     console.log(recipeObj);
 
     recipeContainer.textContent = '';
     showInfo(recipeInfo, 'Loading...');
+
+    // Store recipe id to app state
+    recipeId = id;
 
     // Bookmark recipe
     saveRecipe(undefined, recipeObj);
@@ -637,7 +647,7 @@ const uploadRecipe = async recipe => {
     renderRecipe(recipeObj);
 
     // Add recipe id to URL
-    history.pushState({}, '', `#${recipeObj.id}`);
+    history.pushState({}, '', `#${id}`);
   } catch (error) {
     console.dir(error);
     showInfo(popupInfo, error.message, ERROR_COLOR);
