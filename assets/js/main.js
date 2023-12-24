@@ -31,6 +31,7 @@ const paginationBtnNext = document.querySelector('.btn-pg-next');
 
 const openPopupBtn = document.querySelector('.btn-open-popup');
 const closePopupBtn = document.querySelector('.btn-close-popup');
+const openPopupBtnItem = document.querySelector('#app-header-list .open-popup-item');
 const popupInfo = document.querySelector('#popup .popup-info');
 const addRecipeForm = document.getElementById('add-recipe');
 const addRecipeSubmitBtn = document.querySelector('#popup .btn-submit-recipe');
@@ -59,12 +60,10 @@ const AJAX = async (url, data = undefined) => {
         : {}
     );
 
-    if (!res.ok)
-      throw new Error(`Something went wrong. Invalid request (${res.status})!`);
+    if (!res.ok) throw new Error(`Something went wrong. Invalid request (${res.status})!`);
 
     const jsonRes = await res.json();
-    if (jsonRes.status !== 'success')
-      throw new Error(`An error occurred! ${jsonRes.message}`);
+    if (jsonRes.status !== 'success') throw new Error(`An error occurred! ${jsonRes.message}`);
 
     return jsonRes;
   } catch (error) {
@@ -79,8 +78,7 @@ const AJAX = async (url, data = undefined) => {
  * @param {String} color Message color
  */
 const showInfo = (element, msg, fontColor = INFO_COLOR) => {
-  if (element.classList.contains('hidden-info'))
-    element.classList.toggle('hidden-info');
+  if (element.classList.contains('hidden-info')) element.classList.toggle('hidden-info');
 
   element.style.color = fontColor;
   element.textContent = msg;
@@ -99,7 +97,7 @@ const showInfo = (element, msg, fontColor = INFO_COLOR) => {
 const generateRecipePreviewItem = (recipe, className) => {
   const { id, image_url, title, publisher, key } = recipe;
 
-  return `<li class="recipe-item ${className}" data-id="${id}">
+  return `<li class="recipe-item hightlight-hover ${className}" data-id="${id}">
               <a href="#" class="recipe-preview-link">
                 <img
                   class="preview-img"
@@ -110,7 +108,7 @@ const generateRecipePreviewItem = (recipe, className) => {
                   <p class="preview-title">${title}</p>
                   <p class="preview-publisher">
                   <span>${publisher}</span>
-                  ${key ? '<span class="preview-user">👤</span>' : ''}
+                  ${key ? '<span class="preview-user opacity-6">👤</span>' : ''}
                   </p>
                 </div>
               </a>
@@ -128,9 +126,7 @@ const renderRecipeList = (
   className = 'recipe-preview-item'
 ) => {
   let html = '';
-  recipes.forEach(
-    recipe => (html += generateRecipePreviewItem(recipe, className))
-  );
+  recipes.forEach(recipe => (html += generateRecipePreviewItem(recipe, className)));
 
   infoContainer.classList.add('hidden-info');
   listContainer.textContent = '';
@@ -152,9 +148,7 @@ const searchRecipe = async keyword => {
     paginationBtnPrev.classList.add('hidden');
     paginationBtnNext.classList.add('hidden');
 
-    const jsonData = await AJAX(
-      `${FORKIFY_API_URL}?search=${keyword}&key=${FORKIFY_API_KEY}`
-    );
+    const jsonData = await AJAX(`${FORKIFY_API_URL}?search=${keyword}&key=${FORKIFY_API_KEY}`);
     totalRecipes = jsonData.results;
 
     if (!totalRecipes) throw new Error('No recipes found. Please try again!');
@@ -264,9 +258,7 @@ const highlightItem = recipeId => {
   document.querySelectorAll('.recipe-item').forEach(item => {
     const classList = item.classList;
 
-    item.dataset.id === recipeId
-      ? classList.add('highlight')
-      : classList.remove('highlight');
+    item.dataset.id === recipeId ? classList.add('highlight') : classList.remove('highlight');
   });
 };
 
@@ -289,17 +281,7 @@ const renderRecipe = recipe => {
       })
       .join('');
 
-  const {
-    publisher,
-    ingredients,
-    source_url,
-    image_url,
-    title,
-    servings,
-    cooking_time,
-    key,
-    id,
-  } = recipe;
+  const { publisher, ingredients, source_url, image_url, title, servings, cooking_time, key, id } = recipe;
 
   // Add servings to app state
   servingsCounter = servings;
@@ -315,38 +297,37 @@ const renderRecipe = recipe => {
   </div>
 
   <div class="recipe-text">
-    <div class="recipe-actions">
-      <p class="recipe-duration">🕒 <span>${cooking_time}</span> minutes</p>
-      <div class="recipe-servings-box">
-        <p class="recipe-servings">🥣 <span>${servings}</span> servings</p>
-        <div class = "update-ing-btns">
-          <a href="#" class="increase-servings">➕</a>
-          <a href="#" class="decrease-servings">➖</a>
+    <div class="recipe-header recipe-sub-section">
+      <div class="recipe-actions">
+        <p class="recipe-duration"><span class="action-logo">🕒</span> <span class="action-value">${cooking_time}</span> minutes</p>
+        <div class="recipe-servings-box">
+          <p class="recipe-servings"><span class="action-logo opacity-6">👥</span> <span class="action-value">${servings}</span> servings</p>
+          <div class = "update-ing-btns">
+            <a href="#" class="increase-servings">➕</a>
+            <a href="#" class="decrease-servings">➖</a>
+          </div>
         </div>
       </div>
 
-      ${key ? '<span class="recipe-user">👤</span>' : ''}
-      
-      <a href="#" class="save-recipe">${
-        isSavedRecipe(id) ? 'Unsave' : 'Save'
-      }</a>
+      <div class="recipe-actions">
+        ${key ? '<span class="recipe-user opacity-6">👤</span>' : ''}
+        <a href="#" class="save-recipe">${isSavedRecipe(id) ? '💙' : '🤍'}</a>
+      </div>
     </div>
 
-    <div class="ingredients">
-      <h2 class="ingredients-title">Recipe Ingredients</h2>
-      <ul class="recipe-ingredient-list">${generateIngredientList(
-        ingredients
-      )}</ul>
+    <div class="ingredients recipe-sub-section">
+      <h2 class="ingredients-title recipe-sub-head">Recipe Ingredients</h2>
+      <ul class="recipe-ingredient-list">${generateIngredientList(ingredients)}</ul>
     </div>
 
     <div class="cook">
-      <h2 class="cook-title">How to cook it</h2>
+      <h2 class="cook-title recipe-sub-head">How to cook it</h2>
       <p class="cook-text">
         This recipe was carefully designed and tested by
         <span> ${publisher}</span>. Please check out directions at
         their website.
       </p>
-      <a href="${source_url}" target="_blank" class="btn-direction">Direction &rightarrow;</a>
+      <a href="${source_url}" target="_blank" class="btn-link light-bg">Direction &rightarrow;</a>
     </div>
   </div>`;
 
@@ -354,14 +335,10 @@ const renderRecipe = recipe => {
   recipeContainer.insertAdjacentHTML('afterbegin', html);
 
   // Bind Save-recipe event
-  document
-    .querySelector('.save-recipe')
-    .addEventListener('click', e => saveRecipeHandler(e, recipe));
+  document.querySelector('.save-recipe').addEventListener('click', e => saveRecipeHandler(e, recipe));
 
   // Bind update servings event
-  document
-    .querySelector('.update-ing-btns')
-    .addEventListener('click', e => scaleIngredientsCB(e, recipe));
+  document.querySelector('.update-ing-btns').addEventListener('click', e => scaleIngredientsCB(e, recipe));
 };
 
 /**
@@ -370,9 +347,7 @@ const renderRecipe = recipe => {
  */
 const getRecipe = async id => {
   try {
-    const jsonData = await AJAX(
-      `${FORKIFY_API_URL}/${id}?key=${FORKIFY_API_KEY}`
-    );
+    const jsonData = await AJAX(`${FORKIFY_API_URL}/${id}?key=${FORKIFY_API_KEY}`);
 
     const recipeObj = jsonData.data.recipe;
 
@@ -393,8 +368,7 @@ commonPreviewContainer.forEach(list =>
     e.preventDefault();
 
     const previewItem =
-      e.target.closest('.recipe-preview-item') ||
-      e.target.closest('.saved-recipe-preview-item');
+      e.target.closest('.recipe-preview-item') || e.target.closest('.saved-recipe-preview-item');
 
     if (!previewItem) return;
 
@@ -436,15 +410,13 @@ const loadRecipeForUrlId = () => {
 //////////////////////// SERVINGS ////////////////////////
 
 const updateServingsView = (newServings, scaledIngredients) => {
-  document.querySelector('.recipe-servings span').textContent = newServings;
+  document.querySelector('.recipe-servings .action-value').textContent = newServings;
   const ingListContainer = document.querySelector('.recipe-ingredient-list');
 
-  const ingQuantityContainers =
-    ingListContainer.getElementsByClassName('ing-quantity');
+  const ingQuantityContainers = ingListContainer.getElementsByClassName('ing-quantity');
 
   scaledIngredients.forEach(
-    (quantity, i) =>
-      (ingQuantityContainers[i].textContent = quantity ? fracty(quantity) : '')
+    (quantity, i) => (ingQuantityContainers[i].textContent = quantity ? fracty(quantity) : '')
   );
 };
 
@@ -462,16 +434,11 @@ const scaleIngredientsCB = (e, recipe) => {
   let newServings;
   const { servings, ingredients } = recipe;
 
-  if (e.target.classList.contains('increase-servings'))
-    newServings = ++servingsCounter;
+  if (e.target.classList.contains('increase-servings')) newServings = ++servingsCounter;
   if (e.target.classList.contains('decrease-servings'))
     newServings = servingsCounter === 1 ? servingsCounter : --servingsCounter; // ensures that newServings is atleast 1
 
-  const scaledIngredients = scaleIngredients(
-    servings,
-    newServings,
-    ingredients
-  );
+  const scaledIngredients = scaleIngredients(servings, newServings, ingredients);
 
   updateServingsView(newServings, scaledIngredients);
 };
@@ -482,8 +449,7 @@ const isSavedRecipe = recipeId => {
   return !savedRecipes.every(recipe => recipe.id !== recipeId);
 };
 
-const updateLocalStorage = () =>
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedRecipes));
+const updateLocalStorage = () => localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedRecipes));
 
 const saveRecipe = (btn, recipe) => {
   // Add recipe to savedRecipes
@@ -493,7 +459,7 @@ const saveRecipe = (btn, recipe) => {
   updateLocalStorage();
 
   // Change save button to 'Unsave'
-  if (btn) btn.textContent = 'Unsave';
+  if (btn) btn.textContent = '💙';
 
   // Saved Recipe View:
 
@@ -526,12 +492,10 @@ const unsaveRecipe = (btn, recipeId) => {
   }
 
   // Change 'Unsave' button to 'Save'
-  btn.textContent = 'Save';
+  btn.textContent = '🤍';
 
   // Remove recipe form Saved recipe view using recipeId
-  const recipeItem = savedRecipesContainer.querySelector(
-    `[data-id="${recipeId}"]`
-  );
+  const recipeItem = savedRecipesContainer.querySelector(`[data-id="${recipeId}"]`);
 
   if (recipeItem) recipeItem.remove();
 };
@@ -561,18 +525,12 @@ const loadSavedRecipes = () => {
   savedRecipes.push(...JSON.parse(localData));
 
   // If yes then, render them in Saved recipes view
-  renderRecipeList(
-    savedRecipes,
-    savedRecipesInfo,
-    savedRecipesContainer,
-    'saved-recipe-preview-item'
-  );
+  renderRecipeList(savedRecipes, savedRecipesInfo, savedRecipesContainer, 'saved-recipe-preview-item');
 };
 
 ///////////////////// ADD RECIPE POPUP ////////////////////////////
 
-const clearFormInputs = form =>
-  form.querySelectorAll('input').forEach(inp => (inp.value = ''));
+const clearFormInputs = form => form.querySelectorAll('input').forEach(inp => (inp.value = ''));
 
 const togglePopup = () => {
   const popup = document.getElementById('popup');
@@ -581,8 +539,12 @@ const togglePopup = () => {
   backdrop.classList.toggle('hidden-popup');
 };
 
-openPopupBtn.addEventListener('click', function (e) {
+openPopupBtnItem.addEventListener('click', function (e) {
   e.preventDefault();
+
+  const btn = e.target.closest('.open-popup-item');
+  if (!btn) return;
+
   // clearFormInputs(addRecipeForm);
   popupInfo.classList.add('hidden-info');
   addRecipeSubmitBtn.disabled = false;
@@ -620,10 +582,7 @@ const validateIngredients = ingredients => {
 
 const uploadRecipe = async recipe => {
   try {
-    const jsonData = await AJAX(
-      `${FORKIFY_API_URL}?key=${FORKIFY_API_KEY}`,
-      recipe
-    );
+    const jsonData = await AJAX(`${FORKIFY_API_URL}?key=${FORKIFY_API_KEY}`, recipe);
 
     showInfo(popupInfo, 'Congrats! Your recipe is uploaded successfully!');
 
@@ -668,16 +627,10 @@ addRecipeForm.addEventListener('submit', function (e) {
 
   const formDataArr = [...new FormData(addRecipeForm)];
 
-  const ingredients = formDataArr.filter(
-    inp => inp[0].startsWith('inp-ing') && inp[1].trim() !== ''
-  );
+  const ingredients = formDataArr.filter(inp => inp[0].startsWith('inp-ing') && inp[1].trim() !== '');
 
   if (!ingredients.length) {
-    showInfo(
-      popupInfo,
-      'You must provide at least one ingredient!',
-      ERROR_COLOR
-    );
+    showInfo(popupInfo, 'You must provide at least one ingredient!', ERROR_COLOR);
     return;
   }
 

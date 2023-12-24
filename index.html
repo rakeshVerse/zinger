@@ -3,45 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Zinger</title>
+    <title>🧑‍🍳 Zinger</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/css/style.css" />
     <script defer type="module" src="assets/js/main.js"></script>
   </head>
-  <body>
+  <body class="theme-1">
     <div class="container">
       <header id="app-header">
-        <!-- Search Recipe -->
-        <form action="" id="search-form">
-          <div class="search-input-box">
-            <input
-              type="search"
-              name="search-keyword"
-              id="search-keyword"
-              placeholder="Search over 1,000,000 recipes..."
-            />
-            <button type="submit" class="btn btn-search">🔎</button>
-          </div>
-        </form>
-
-        <a href="#" class="btn-add-recipe btn-open-popup">Add Recipe</a>
-
-        <div class="saved-recipes-box">
-          <p class="saved-recipes-menu">Saved Recipes</p>
-          <div class="saved-recipe-list-box hidden">
-            <div class="saved-recipes-info">
-              <p>
-                Nothing saved yet. Discover a nice recipe and save it for later!
-              </p>
-            </div>
-            <ul class="recipe-list saved-recipes-list"></ul>
-          </div>
-        </div>
+        <nav>
+          <ul id="app-header-list">
+            <li class="main-menu-item">
+              <a class="main-menu-item-link" href="/" id="app-logo">🧑‍🍳Zinger</a>
+            </li>
+            <li class="main-menu-item">
+              <form action="" id="search-form">
+                <div class="search-input-box">
+                  <input
+                    type="search"
+                    name="search-keyword"
+                    id="search-keyword"
+                    placeholder="Search over 1,000,000 recipes..."
+                  />
+                  <button type="submit" class="btn btn-search">🔎</button>
+                </div>
+              </form>
+            </li>
+            <li class="main-menu-item saved-recipes-box menu-highlight">
+              <a class="main-menu-item-link" href="#"><span class="menu-logo">🗃️</span> Recipe Vault</a>
+              <div class="saved-recipe-list-box hidden">
+                <div class="saved-recipes-info">
+                  <p>Nothing saved yet. Discover a nice recipe and save it for later!</p>
+                </div>
+                <ul class="recipe-list saved-recipes-list"></ul>
+              </div>
+            </li>
+            <li class="main-menu-item menu-highlight open-popup-item">
+              <a href="#" class="main-menu-item-link btn-add-recipe btn-open-popup"
+                ><span class="menu-logo">📝</span> Add Recipe</a
+              >
+            </li>
+          </ul>
+        </nav>
       </header>
 
       <main id="app-main">
@@ -51,12 +59,8 @@
           <ul class="recipe-list recipe-list-ht recipe-preview-list"></ul>
 
           <div class="pagination-box">
-            <a href="#" class="btn-link btn-pg-prev hidden"
-              >&leftarrow; Previous</a
-            >
-            <a href="#" class="btn-link btn-pg-next hidden"
-              >Next &rightarrow;</a
-            >
+            <a href="#" class="btn-link dark-bg btn-pg-prev hidden">&leftarrow; Previous</a>
+            <a href="#" class="btn-link dark-bg btn-pg-next hidden">Next &rightarrow;</a>
           </div>
 
           <footer id="preview-footer">
@@ -65,7 +69,8 @@
               <script>
                 document.write(new Date().getFullYear());
               </script>
-              Rakesh Ramteke
+              <strong>ZINGER</strong>
+              by Rakesh Ramteke
             </p>
           </footer>
         </aside>
@@ -74,8 +79,7 @@
           <div class="recipe-info">
             <p>Welcome aboard!</p>
             <p>
-              Start your culinary journey by searching for a delicious recipe or
-              your favorite ingredient.
+              Start your culinary journey by searching for a delicious recipe or your favorite ingredient.
             </p>
             <p>Let the cooking adventures begin!</p>
           </div>
@@ -103,24 +107,12 @@
               <div class="inputs">
                 <div class="frm-inp-box">
                   <label for="inp-title">Title</label>
-                  <input
-                    type="text"
-                    name="title"
-                    id="inp-title"
-                    value="Test-recipe"
-                    required
-                  />
+                  <input type="text" name="title" id="inp-title" value="Test-recipe" required />
                 </div>
 
                 <div class="frm-inp-box">
                   <label for="inp-url">URL</label>
-                  <input
-                    type="text"
-                    name="source_url"
-                    id="inp-url"
-                    value="test-url"
-                    required
-                  />
+                  <input type="text" name="source_url" id="inp-url" value="test-url" required />
                 </div>
 
                 <div class="frm-inp-box">
@@ -136,35 +128,17 @@
 
                 <div class="frm-inp-box">
                   <label for="inp-publisher">Publisher</label>
-                  <input
-                    type="text"
-                    name="publisher"
-                    id="inp-publisher"
-                    value="Test publisher"
-                    required
-                  />
+                  <input type="text" name="publisher" id="inp-publisher" value="Test publisher" required />
                 </div>
 
                 <div class="frm-inp-box">
                   <label for="inp-duration">Prep time</label>
-                  <input
-                    type="number"
-                    name="cooking_time"
-                    id="inp-duration"
-                    value="20"
-                    required
-                  />
+                  <input type="number" name="cooking_time" id="inp-duration" value="20" required />
                 </div>
 
                 <div class="frm-inp-box">
                   <label for="inp-servings">Servings</label>
-                  <input
-                    type="number"
-                    name="servings"
-                    id="inp-servings"
-                    value="4"
-                    required
-                  />
+                  <input type="number" name="servings" id="inp-servings" value="4" required />
                 </div>
               </div>
             </section>
