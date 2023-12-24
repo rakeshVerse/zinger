@@ -1,12 +1,8 @@
 import {
   FORKIFY_API_KEY,
   FORKIFY_API_URL,
-  ERROR_COLOR,
-  INFO_COLOR,
   RECIPE_ITEMS_PER_PAGE,
-  NETWORK_ERROR,
   LOCAL_STORAGE_KEY,
-  ING_START_INDEX,
   POPUP_HIDE_SECONDS,
 } from './config';
 
@@ -62,7 +58,7 @@ const AJAX = async (url, data = undefined) => {
         : {}
     );
 
-    if (!res.ok) throw new Error(`Something went wrong. Invalid request (${res.status})!`);
+    if (!res.ok) throw new Error(`Something went wrong! Invalid request (${res.status}).`);
 
     const jsonRes = await res.json();
     if (jsonRes.status !== 'success') throw new Error(`An error occurred! ${jsonRes.message}`);
@@ -79,11 +75,10 @@ const AJAX = async (url, data = undefined) => {
  * @param {String} msg Message to display
  * @param {String} color Message color
  */
-const showInfo = (element, msg, fontColor = INFO_COLOR) => {
-  if (element.classList.contains('hidden-info')) element.classList.toggle('hidden-info');
-
-  element.style.color = fontColor;
+const showInfo = (element, msg, className = 'info') => {
+  element.classList.remove('hidden-info');
   element.textContent = msg;
+  element.className = `${element.classList[0]} ${className}`;
 };
 
 /////////////// THEME ////////////////
@@ -182,7 +177,7 @@ const searchRecipe = async keyword => {
     }
   } catch (error) {
     console.dir(error);
-    showInfo(recipePreviewInfo, error.message, ERROR_COLOR);
+    showInfo(recipePreviewInfo, error.message, 'danger');
   }
 };
 
@@ -371,7 +366,7 @@ const getRecipe = async id => {
     // recipe = recipeObj;
   } catch (error) {
     console.dir(error);
-    showInfo(recipeInfo, error.message, ERROR_COLOR);
+    showInfo(recipeInfo, error.message, 'danger');
   }
 };
 
@@ -579,7 +574,7 @@ const validateIngredients = ingredients => {
     const ingParts = details.split(',');
 
     if (ingParts.length !== 3 || ingParts[2].trim() === '') {
-      showInfo(popupInfo, 'Invalid ingredient format!', ERROR_COLOR);
+      showInfo(popupInfo, 'Invalid ingredient format!', 'danger');
       return false;
     }
 
@@ -622,7 +617,7 @@ const uploadRecipe = async recipe => {
     history.pushState({}, '', `#${id}`);
   } catch (error) {
     console.dir(error);
-    showInfo(popupInfo, error.message, ERROR_COLOR);
+    showInfo(popupInfo, error.message, 'danger');
   }
 };
 
@@ -643,7 +638,7 @@ addRecipeForm.addEventListener('submit', function (e) {
   const ingredients = formDataArr.filter(inp => inp[0].startsWith('inp-ing') && inp[1].trim() !== '');
 
   if (!ingredients.length) {
-    showInfo(popupInfo, 'You must provide at least one ingredient!', ERROR_COLOR);
+    showInfo(popupInfo, 'You must provide at least one ingredient!', 'danger');
     return;
   }
 
