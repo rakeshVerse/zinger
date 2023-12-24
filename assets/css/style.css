@@ -1,27 +1,29 @@
-/* :root {
-  --bg-pri: #e5f3ff;
-  --bg-pri-opacity: #e5f3ffd1;
-  --bg-sec: #f0f8ff;
-  --bg-neutral: #fff;
-  --bg-backdrop: #5555556e;
-
-  --txt-pri: #555;
-  --txt-sec: #333;
-  --txt-ter: #888;
-  --txt-qua: #60b5ff;
-} */
-
+/* aliceblue */
 .theme-1 {
   --bg-pri: #e5f3ff;
   --bg-pri-opacity: #e5f3ffd1;
   --bg-sec: #f0f8ff;
+  --bg-ter: #cde8ff;
+
   --bg-neutral: #fff;
   --bg-backdrop: #5555556e;
 
-  --txt-pri: #555;
+  --txt-pri: #405363;
   --txt-sec: #333;
-  --txt-ter: #888;
-  --txt-qua: #60b5ff;
+}
+
+/* droplet */
+.theme-2 {
+  --bg-pri: #abd9ff;
+  --bg-pri-opacity: #abd9ffbf;
+  --bg-sec: #cde8ff;
+  --bg-ter: #bce1ff;
+
+  --bg-neutral: #fff;
+  --bg-backdrop: #5555556e;
+
+  --txt-pri: #546c80;
+  --txt-sec: #333;
 }
 
 * {
@@ -63,7 +65,7 @@ body {
 }
 
 .highlight {
-  background-color: var(--bg-pri);
+  background-color: var(--bg-ter);
 }
 
 .menu-highlight {
@@ -76,7 +78,7 @@ body {
 }
 
 .hightlight-hover:hover {
-  background-color: var(--bg-pri);
+  background-color: var(--bg-ter);
 }
 
 .opacity-6 {
@@ -85,6 +87,29 @@ body {
 
 ul > li {
   list-style: none;
+}
+
+.btn-link {
+  text-decoration: none;
+  font-size: 1.6rem;
+  font-weight: 400;
+  padding: 0.5rem 1rem;
+  width: 12rem;
+  text-align: center;
+  color: var(--txt-pri);
+}
+
+.btn-link:hover,
+.btn-link:active {
+  background-color: var(--bg-neutral);
+}
+
+.dark-bg {
+  background-color: var(--bg-pri);
+}
+
+.light-bg {
+  background-color: var(--bg-sec);
 }
 
 #app-main {
@@ -98,7 +123,7 @@ ul > li {
   justify-content: space-evenly;
   align-items: center;
 
-  background: rgb(229, 243, 255);
+  background-color: var(--bg-pri);
 }
 
 #app-header-list .main-menu-item {
@@ -221,33 +246,8 @@ ul > li {
   padding: 0 1rem;
 }
 
-.btn-link {
-  text-decoration: none;
-  font-size: 1.6rem;
-  font-weight: 400;
-  padding: 0.5rem 1rem;
-  width: 12rem;
-  text-align: center;
-  color: var(--txt-qua);
-}
-
-.btn-link:hover,
-.btn-link:active {
-  color: var(--txt-ter);
-  background-color: var(--bg-neutral);
-}
-
-.dark-bg {
-  background-color: var(--bg-pri);
-}
-
-.light-bg {
-  background-color: var(--bg-sec);
-}
-
 .preview-info {
   text-align: center;
-  color: var(--txt-qua);
   font-size: 2rem;
 
   position: absolute;
@@ -318,7 +318,6 @@ ul > li {
   text-align: center;
   font-size: 2.2rem;
   margin-top: 10rem;
-  color: var(--txt-qua);
   padding: 0 5rem;
 }
 
@@ -363,6 +362,7 @@ ul > li {
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: var(--bg-pri-opacity);
+  color: var(--bg-neutral);
   font-size: 2.6rem;
   padding: 1rem;
   text-align: center;
@@ -419,7 +419,7 @@ ul > li {
 }
 
 .update-ing-btns a {
-  background: #e5f3ff;
+  background-color: var(--bg-pri);
   border-radius: 50%;
   width: 3rem;
   height: 3rem;
@@ -434,7 +434,7 @@ ul > li {
 
 .save-recipe {
   font-size: 2.5rem;
-  background: #e5f3ff;
+  background-color: var(--bg-pri);
   border-radius: 50%;
   width: 5rem;
   height: 5rem;
@@ -477,6 +477,12 @@ ul > li {
   grid-template-columns: 1fr 1fr;
   list-style: none;
   font-size: 1.7rem;
+  color: var(--txt-sec);
+}
+
+.recipe-ingredient {
+  display: flex;
+  column-gap: 1rem;
 }
 
 /* cook */
@@ -535,17 +541,16 @@ ul > li {
   cursor: pointer;
   font-size: 3rem;
   font-weight: 400;
-  border: 1px solid var(--txt-ter);
   width: 4rem;
   height: 4rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--txt-ter);
+  color: var(--txt-pri);
 }
 
 .btn-close-popup:hover {
-  color: var(--txt-pri);
+  color: var(--txt-sec);
 }
 
 #popup main {
@@ -592,7 +597,7 @@ ul > li {
   outline: none;
   padding: 0.8rem 2rem;
   font-size: 1.6rem;
-  color: var(--txt-sec);
+  color: var(--txt-pri);
   border-radius: 0.5rem;
   font-family: 'Roboto', sans-serif;
   width: 35rem;
@@ -613,13 +618,14 @@ ul > li {
   text-transform: uppercase;
   font-family: 'Roboto', sans-serif;
   outline: none;
-  border: 1px solid var(--txt-ter);
+  border: none;
   background-color: var(--bg-pri);
+  color: var(--txt-pri);
   padding: 1rem 2rem;
   cursor: pointer;
   margin-top: 2rem;
-  font-size: 2.2rem;
-  font-weight: 300;
+  font-size: 2rem;
+  font-weight: 400;
   transition: transform 0.5s;
 }
 

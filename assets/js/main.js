@@ -275,9 +275,17 @@ const renderRecipe = recipe => {
     ingredients
       .map(ing => {
         const { quantity, unit, description } = ing;
-        return `<li class="recipe-ingredient"><span class="ing-quantity">${
-          quantity ? fracty(quantity) : ''
-        } </span> ${unit} ${description}</li>`;
+        return `
+        <li class="recipe-ingredient">
+          <span class="opacity-6">👉🏿</span>
+
+          <div>
+            <span class="ing-quantity">
+             ${quantity ? fracty(quantity) : ''}
+            </span>
+            ${unit} ${description}
+          </div>
+        </li>`;
       })
       .join('');
 
