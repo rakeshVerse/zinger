@@ -319,7 +319,7 @@ const renderRecipe = recipe => {
 
       <div class="recipe-actions">
         ${key ? '<span class="recipe-user opacity-6">👤</span>' : ''}
-        <a href="#" class="save-recipe">${isSavedRecipe(id) ? '💙' : '🤍'}</a>
+        <a href="#" class="save-recipe">${isSavedRecipe(id) ? '❤️' : '🤍'}</a>
       </div>
     </div>
 
@@ -467,7 +467,7 @@ const saveRecipe = (btn, recipe) => {
   updateLocalStorage();
 
   // Change save button to 'Unsave'
-  if (btn) btn.textContent = '💙';
+  if (btn) btn.textContent = '❤️';
 
   // Saved Recipe View:
 
