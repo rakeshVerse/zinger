@@ -5,9 +5,6 @@
   --bg-sec: #cde8ff;
   --bg-ter: #bce1ff;
 
-  --bg-neutral: #fff;
-  --bg-backdrop: #5555556e;
-
   --txt-pri: #546c80;
   --txt-sec: #333;
 }
@@ -18,9 +15,6 @@
   --bg-pri-opacity: #e5f3ffd1;
   --bg-sec: #f0f8ff;
   --bg-ter: #cde8ff;
-
-  --bg-neutral: #fff;
-  --bg-backdrop: #5555556e;
 
   --txt-pri: #405363;
   --txt-sec: #333;
@@ -33,31 +27,52 @@
   --bg-sec: #ffcdd0;
   --bg-ter: #ffbcc1;
 
-  --bg-neutral: #fff;
-  --bg-backdrop: #5555556e;
-
   --txt-pri: #805457;
   --txt-sec: #333;
 }
 
-/* Dead Pixel */
+/* paua */
+.theme-paua {
+  --bg-pri: #272e4a;
+  --bg-pri-opacity: #272e4acb;
+  --bg-sec: #60677d;
+  --bg-ter: #4c536c;
+
+  --txt-pri: #e7e8ec;
+  --txt-sec: #fff;
+}
+
+/* dead pixel */
 .theme-dead-pixel {
   --bg-pri: #3b3b3b;
   --bg-pri-opacity: #3b3b3bc4;
   --bg-sec: #838383;
   --bg-ter: #5e5e5e;
 
-  --bg-neutral: #fff;
-  --bg-backdrop: #5555556e;
-
   --txt-pri: #e9e9e9;
   --txt-sec: #fff;
+}
+
+/* koopa */
+.theme-koopa {
+  --bg-pri: #62cf62;
+  --bg-pri-opacity: #62cf62ce;
+  --bg-sec: #b5e8b3;
+  --bg-ter: #86d984;
+
+  --txt-pri: #163816;
+  --txt-sec: #031003;
 }
 
 :root {
   --bg-pri-dead-pixel: #3b3b3b;
   --bg-pri-droplet: #abd9ff;
   --bg-pri-poddle: #ffabb2;
+  --bg-pri-paua: #272e4a;
+  --bg-pri-koopa: #62cf62;
+
+  --bg-neutral: #fff;
+  --bg-backdrop: #5555556e;
 }
 
 * {
@@ -168,6 +183,14 @@ ul > li {
 
 .theme-poodle {
   background-color: var(--bg-pri-poddle);
+}
+
+.theme-paua {
+  background-color: var(--bg-pri-paua);
+}
+
+.theme-koopa {
+  background-color: var(--bg-pri-koopa);
 }
 
 .info {
@@ -590,6 +613,7 @@ ul > li {
 
 #popup {
   background-color: var(--bg-neutral);
+  color: #555;
   width: 100rem;
 
   position: absolute;
@@ -622,11 +646,10 @@ ul > li {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--txt-pri);
 }
 
 .btn-close-popup:hover {
-  color: var(--txt-sec);
+  color: var(--bg-pri);
 }
 
 #popup main {
@@ -669,18 +692,18 @@ ul > li {
 }
 
 #add-recipe input {
-  border: 1px solid var(--bg-pri);
+  border: 1px solid var(--bg-sec);
   outline: none;
   padding: 0.8rem 2rem;
   font-size: 1.6rem;
-  color: var(--txt-pri);
+  color: #555;
   border-radius: 0.5rem;
   font-family: 'Roboto', sans-serif;
   width: 35rem;
 }
 
 #add-recipe input:focus {
-  outline: 1.5px solid var(--bg-pri);
+  outline: 1.5px solid var(--bg-sec);
 }
 
 #add-recipe label {
