@@ -1,5 +1,19 @@
+/* droplet */
+.theme-droplet {
+  --bg-pri: #abd9ff;
+  --bg-pri-opacity: #abd9ffbf;
+  --bg-sec: #cde8ff;
+  --bg-ter: #bce1ff;
+
+  --bg-neutral: #fff;
+  --bg-backdrop: #5555556e;
+
+  --txt-pri: #546c80;
+  --txt-sec: #333;
+}
+
 /* aliceblue */
-.theme-1 {
+.theme-alice {
   --bg-pri: #e5f3ff;
   --bg-pri-opacity: #e5f3ffd1;
   --bg-sec: #f0f8ff;
@@ -12,18 +26,24 @@
   --txt-sec: #333;
 }
 
-/* droplet */
-.theme-2 {
-  --bg-pri: #abd9ff;
-  --bg-pri-opacity: #abd9ffbf;
-  --bg-sec: #cde8ff;
-  --bg-ter: #bce1ff;
+/* Poodle Skirt */
+.theme-poodle {
+  --bg-pri: #ffabb2;
+  --bg-pri-opacity: #ffabb2e5;
+  --bg-sec: #ffcdd0;
+  --bg-ter: #ffbcc1;
 
   --bg-neutral: #fff;
   --bg-backdrop: #5555556e;
 
-  --txt-pri: #546c80;
+  --txt-pri: #805457;
   --txt-sec: #333;
+}
+
+:root {
+  --bg-pri-alice: #e5f3ff;
+  --bg-pri-droplet: #abd9ff;
+  --bg-pri-poddle: #ffabb2;
 }
 
 * {
@@ -97,6 +117,7 @@ ul > li {
   width: 12rem;
   text-align: center;
   color: var(--txt-pri);
+  transition: background-color 0.3s;
 }
 
 .btn-link:hover,
@@ -110,6 +131,29 @@ ul > li {
 
 .light-bg {
   background-color: var(--bg-sec);
+}
+
+.theme-item {
+  column-gap: 0.3rem;
+}
+
+.theme-btn {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 3px solid var(--bg-neutral);
+}
+
+.theme-droplet {
+  background-color: var(--bg-pri-droplet);
+}
+
+.theme-alice {
+  background-color: var(--bg-pri-alice);
+}
+
+.theme-poodle {
+  background-color: var(--bg-pri-poddle);
 }
 
 #app-main {
@@ -493,6 +537,7 @@ ul > li {
 
 .cook-text {
   margin-bottom: 2rem;
+  color: var(--txt-sec);
 }
 
 .cook-text span {

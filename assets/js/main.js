@@ -36,6 +36,8 @@ const popupInfo = document.querySelector('#popup .popup-info');
 const addRecipeForm = document.getElementById('add-recipe');
 const addRecipeSubmitBtn = document.querySelector('#popup .btn-submit-recipe');
 
+const themeMenu = document.querySelector('.theme-item');
+
 const recipeSearchInput = document.getElementById('search-keyword');
 recipeSearchInput.value = '';
 
@@ -83,6 +85,15 @@ const showInfo = (element, msg, fontColor = INFO_COLOR) => {
   element.style.color = fontColor;
   element.textContent = msg;
 };
+
+/////////////// THEME ////////////////
+themeMenu.addEventListener('click', function (e) {
+  e.preventDefault();
+  if (e.target === this) return;
+
+  const themeClass = e.target.classList[1];
+  document.body.className = themeClass;
+});
 
 /////////////// SEARCH RECIPE ////////////////
 
@@ -280,9 +291,7 @@ const renderRecipe = recipe => {
           <span class="opacity-6">👉🏿</span>
 
           <div>
-            <span class="ing-quantity">
-             ${quantity ? fracty(quantity) : ''}
-            </span>
+            <span class="ing-quantity">${quantity ? fracty(quantity) : ''}</span>
             ${unit} ${description}
           </div>
         </li>`;
@@ -296,11 +305,7 @@ const renderRecipe = recipe => {
 
   const html = `
   <div class="recipe-img-box">
-    <img
-      src="${image_url}"
-      alt=""
-      class="recipe-img"
-    />
+    <img src="${image_url}" alt="" class="recipe-img"/>
     <h1 class="recipe-title">${title}</h1>
   </div>
 
