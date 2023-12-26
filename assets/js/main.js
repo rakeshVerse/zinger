@@ -228,12 +228,20 @@ const showInfo = (element, msg, className = 'info') => {
 };
 
 /////////////// THEME ////////////////
+const persistTheme = () => {
+  const themeClass = localStorage.getItem('theme');
+  if (themeClass) document.body.className = themeClass;
+};
+
 themeMenu.addEventListener('click', function (e) {
   e.preventDefault();
   if (e.target === this) return;
 
   const themeClass = e.target.classList[1];
   document.body.className = themeClass;
+
+  // store theme class in local strorage
+  localStorage.setItem('theme', themeClass);
 });
 
 /////////////// TYPEHEAD ////////////////
@@ -896,6 +904,7 @@ addRecipeForm.addEventListener('submit', function (e) {
 
 ///////////////////// INIT ////////////////////////////
 const init = () => {
+  persistTheme();
   loadRecipeForUrlId();
   loadSavedRecipes();
 };
