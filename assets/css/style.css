@@ -94,6 +94,7 @@ body {
   font-size: 1.8rem;
   font-weight: 300;
   letter-spacing: 0.7px;
+  overflow: hidden;
 
   background-image: radial-gradient(#efefff 2px, transparent 2px), radial-gradient(#efefff 2px, #ffffff 2px);
   background-size: 80px 80px;
@@ -298,11 +299,50 @@ ul > li {
   background: none;
   font-size: 2.4rem;
   cursor: pointer;
+  padding: 1rem 1rem 1rem 2rem;
 
   position: absolute;
-  top: 49%;
-  right: 8%;
+  top: 50%;
+  right: 10%;
   transform: translate(50%, -50%);
+}
+
+/* typehead */
+.search-menu-item {
+  position: relative;
+}
+
+.typehead {
+  position: absolute;
+  top: 75%;
+  left: 0;
+  margin-left: 2rem;
+  background-color: #fff;
+  width: 30rem;
+  z-index: 1;
+}
+
+.typehead-list {
+  color: #333;
+  font-size: 2rem;
+  max-height: 70svh;
+  overflow: scroll;
+}
+
+.typehead-item {
+  cursor: pointer;
+  padding: 1rem;
+  border-bottom: 1px solid var(--bg-pri-opacity);
+}
+
+.typehead-item:last-child {
+  border: none;
+}
+
+.typehead-item:hover {
+  background-color: var(--bg-ter);
+  color: var(--bg-neutral);
+  font-weight: 400;
 }
 
 /* LIST */
@@ -476,7 +516,7 @@ ul > li {
 
   margin-bottom: 3rem;
   background-color: var(--bg-sec);
-  padding: 1rem;
+  padding: 1rem 2rem;
   text-transform: uppercase;
 }
 

@@ -21,18 +21,24 @@
             <li class="main-menu-item">
               <a class="main-menu-item-link" href="/" id="app-logo">🧑‍🍳 Zinger</a>
             </li>
-            <li class="main-menu-item">
+            <li class="main-menu-item search-menu-item">
               <form action="" id="search-form">
                 <div class="search-input-box">
                   <input
                     type="search"
                     name="search-keyword"
                     id="search-keyword"
+                    autocomplete="off"
                     placeholder="Search over 1,000,000 recipes..."
                   />
                   <button type="submit" class="btn btn-search">🔎</button>
                 </div>
               </form>
+
+              <!-- typehead -->
+              <div class="typehead">
+                <ul class="typehead-list"></ul>
+              </div>
             </li>
             <li class="main-menu-item saved-recipes-box menu-highlight">
               <a class="main-menu-item-link" href="#"><span class="menu-logo">🗃️</span> Recipe Vault</a>
