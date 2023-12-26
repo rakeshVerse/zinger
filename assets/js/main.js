@@ -159,7 +159,6 @@ const allowedSearchKeywords = [
   'tofu',
   'ketchup',
   'hummus',
-  'chili',
   'maple syrup',
   'parma ham',
   'fajitas',
@@ -249,9 +248,7 @@ const renderTypehead = keywords => {
   typeheadContainer.insertAdjacentHTML('afterbegin', html);
 };
 
-const hideTypehead = () => {
-  typeheadContainer.style.height = 0;
-};
+const hideTypehead = () => (typeheadContainer.style.height = 0);
 
 const handleTypeheadScroll = currentItem => {
   if (
@@ -318,7 +315,7 @@ recipeSearchInput.addEventListener('keyup', function (e) {
 });
 
 // when search input loses focus, hide typehead
-// recipeSearchInput.addEventListener('blur', hideTypehead);
+recipeSearchInput.addEventListener('blur', hideTypehead);
 
 // when click on typehead item, start search
 typeheadContainer.addEventListener('click', function (e) {
