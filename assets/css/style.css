@@ -345,6 +345,12 @@ ul > li {
   font-weight: 400;
 }
 
+.typehead-item.hover {
+  background-color: var(--bg-ter);
+  color: var(--bg-neutral);
+  font-weight: 400;
+}
+
 /* LIST */
 #recipe-list-box {
   flex-basis: 40rem;

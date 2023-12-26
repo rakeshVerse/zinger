@@ -243,42 +243,82 @@ const renderTypehead = keywords => {
   let html = '';
   keywords.forEach(keyword => (html += `<li class="typehead-item">${keyword}</li>`));
 
+  typeheadIndex = -1;
   typeheadContainer.textContent = '';
   typeheadContainer.style.height = 'fit-content';
   typeheadContainer.insertAdjacentHTML('afterbegin', html);
 };
 
 const hideTypehead = () => {
-  // typeheadContainer.textContent = '';
   typeheadContainer.style.height = 0;
+};
+
+const handleTypeheadScroll = currentItem => {
+  if (
+    currentItem.offsetTop < typeheadContainer.scrollTop || // scroll up
+    currentItem.offsetTop + currentItem.offsetHeight > typeheadContainer.clientHeight // scroll down
+  ) {
+    currentItem.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
+const highlightTypehead = index => {
+  const typeheadItems = typeheadContainer.querySelectorAll('.typehead-item');
+  const typeheadItem = typeheadItems[index];
+
+  // display keyword in input box
+  recipeSearchInput.value = typeheadItem.innerHTML;
+
+  // highlight
+  typeheadItems.forEach(item => item.classList.remove('hover'));
+  typeheadItem.classList.add('hover');
+
+  // scroll to highlighted item
+  handleTypeheadScroll(typeheadItem);
 };
 
 // EVENTS
 
 // search input on-keyup
+let typeheadIndex = -1;
+let keywordsLen = 0;
 recipeSearchInput.addEventListener('keyup', function (e) {
   const key = e.key;
-  const input = recipeSearchInput.value;
+  const input = recipeSearchInput.value.toLowerCase().trim();
 
+  // If input is empty or key is enter or escape, hide typehead
   if (!input || key === 'Enter' || key === 'Escape') {
     hideTypehead();
     return;
   }
 
-  // search keyword in the array
-  const keywords = allowedSearchKeywords.filter(keyword => keyword.startsWith(input)).sort();
+  const lastIndex = keywordsLen - 1;
+  switch (key) {
+    case 'ArrowDown':
+      typeheadIndex = typeheadIndex === lastIndex ? 0 : ++typeheadIndex;
+      highlightTypehead(typeheadIndex);
+      break;
+    case 'ArrowUp':
+      typeheadIndex = typeheadIndex < 1 ? lastIndex : --typeheadIndex;
+      highlightTypehead(typeheadIndex);
+      break;
+    default:
+      // search keyword in the array
+      const keywords = allowedSearchKeywords.filter(keyword => keyword.startsWith(input)).sort();
+      keywordsLen = keywords.length;
 
-  // if keyword not found, hide typehead
-  if (!keywords.length) {
-    hideTypehead();
-    return;
+      // if keyword not found, hide typehead
+      if (!keywordsLen) {
+        hideTypehead();
+        return;
+      }
+
+      renderTypehead(keywords);
   }
-
-  renderTypehead(keywords);
 });
 
 // when search input loses focus, hide typehead
-recipeSearchInput.addEventListener('blur', hideTypehead);
+// recipeSearchInput.addEventListener('blur', hideTypehead);
 
 // when click on typehead item, start search
 typeheadContainer.addEventListener('click', function (e) {
