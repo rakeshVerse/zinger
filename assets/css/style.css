@@ -140,12 +140,14 @@ ul > li {
 }
 
 .btn-link {
+  display: inline-block;
   text-decoration: none;
   font-size: 1.6rem;
   font-weight: 400;
   padding: 0.5rem 1rem;
   width: 12rem;
   text-align: center;
+  border-radius: 3rem;
   color: var(--txt-pri);
   transition: background-color 0.3s;
 }
@@ -394,7 +396,7 @@ ul > li {
 }
 
 .recipe-item {
-  padding: 1rem 2rem;
+  padding: 0.8rem 2rem;
   list-style: none;
 }
 
@@ -520,7 +522,7 @@ ul > li {
   justify-content: space-between;
   align-items: center;
 
-  margin-bottom: 3rem;
+  border-radius: 2rem;
   background-color: var(--bg-sec);
   padding: 1rem 2rem;
   text-transform: uppercase;
@@ -661,6 +663,7 @@ ul > li {
   background-color: var(--bg-neutral);
   color: #555;
   width: 100rem;
+  border-radius: 2rem;
 
   position: absolute;
   top: 50%;
@@ -708,6 +711,7 @@ ul > li {
   font-weight: 400;
   font-style: italic;
   font-size: 2rem;
+  padding: 1rem;
 }
 
 /* form */
@@ -771,6 +775,7 @@ ul > li {
   margin-top: 2rem;
   font-size: 2rem;
   font-weight: 400;
+  border-radius: 3rem;
   transition: transform 0.5s;
 }
 

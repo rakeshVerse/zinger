@@ -47,6 +47,7 @@ const savedRecipes = [];
 let recipeId = null;
 let servingsCounter;
 const allowedSearchKeywords = [
+  'vegan',
   'buttermilk',
   'butter',
   'curd',
